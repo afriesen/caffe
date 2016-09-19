@@ -305,7 +305,7 @@ int test() {
         }
         const std::string& output_name = caffe_net.blob_names()[
             caffe_net.output_blob_indices()[j]];
-        LOG(INFO) << "Batch " << i << ", " << output_name << " = " << score;
+        LOG(INFO) << "Batch " << i << " (" << j << ", " << k << ")" << ", " << output_name << " = " << score;
       }
     }
   }

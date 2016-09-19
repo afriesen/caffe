@@ -165,7 +165,13 @@ class BaseConvolutionLayer : public Layer<Dtype> {
   int col_offset_;
   int output_offset_;
 
+#define USE_STATIC_CONV_COL_BUFFER // as documented here: https://github.com/BVLC/caffe/pull/2016
+// NOTE that this error is expected on completion: syncedmem.hpp:31] Check failed: error == cudaSuccess (29 vs. 0)  driver shutting down
+#ifdef USE_STATIC_CONV_COL_BUFFER
+  static Blob<Dtype> col_buffer_;
+#else
   Blob<Dtype> col_buffer_;
+#endif
   Blob<Dtype> bias_multiplier_;
 };
 

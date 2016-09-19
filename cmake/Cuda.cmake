@@ -257,7 +257,10 @@ caffe_select_nvcc_arch_flags(NVCC_FLAGS_EXTRA)
 list(APPEND CUDA_NVCC_FLAGS ${NVCC_FLAGS_EXTRA})
 message(STATUS "Added CUDA NVCC flags for: ${NVCC_FLAGS_EXTRA_readable}")
 
-# Boost 1.55 workaround, see https://svn.boost.org/trac/boost/ticket/9392 or
+# memcpy workaround
+set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} \"-D_FORCE_INLINES\" ")
+
+#n Boost 1.55 workaround, see https://svn.boost.org/trac/boost/ticket/9392 or
 # https://github.com/ComputationalRadiationPhysics/picongpu/blob/master/src/picongpu/CMakeLists.txt
 if(Boost_VERSION EQUAL 105500)
   message(STATUS "Cuda + Boost 1.55: Applying noinline work around")

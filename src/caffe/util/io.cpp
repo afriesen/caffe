@@ -71,10 +71,11 @@ void WriteProtoToBinaryFile(const Message& proto, const char* filename) {
 
 #ifdef USE_OPENCV
 cv::Mat ReadImageToCVMat(const string& filename,
-    const int height, const int width, const bool is_color) {
+    const int height, const int width, const bool is_color,
+    int* img_height, int* img_width) {
   cv::Mat cv_img;
   int cv_read_flag = (is_color ? CV_LOAD_IMAGE_COLOR :
-    CV_LOAD_IMAGE_GRAYSCALE);
+                      CV_LOAD_IMAGE_GRAYSCALE);
   cv::Mat cv_img_origin = cv::imread(filename, cv_read_flag);
   if (!cv_img_origin.data) {
     LOG(ERROR) << "Could not open or find file " << filename;
@@ -85,7 +86,28 @@ cv::Mat ReadImageToCVMat(const string& filename,
   } else {
     cv_img = cv_img_origin;
   }
+  if (img_height != NULL) {
+    *img_height = cv_img.rows;
+  }
+  if (img_width != NULL) {
+    *img_width = cv_img.cols;
+  }
+
   return cv_img;
+//  cv::Mat cv_img;
+//  int cv_read_flag = (is_color ? CV_LOAD_IMAGE_COLOR :
+//    CV_LOAD_IMAGE_GRAYSCALE);
+//  cv::Mat cv_img_origin = cv::imread(filename, cv_read_flag);
+//  if (!cv_img_origin.data) {
+//    LOG(ERROR) << "Could not open or find file " << filename;
+//    return cv_img_origin;
+//  }
+//  if (height > 0 && width > 0) {
+//    cv::resize(cv_img_origin, cv_img, cv::Size(width, height));
+//  } else {
+//    cv_img = cv_img_origin;
+//  }
+//  return cv_img;
 }
 
 cv::Mat ReadImageToCVMat(const string& filename,
@@ -102,11 +124,50 @@ cv::Mat ReadImageToCVMat(const string& filename) {
   return ReadImageToCVMat(filename, 0, 0, true);
 }
 
+cv::Mat ReadCSVToCVMat(const string& filename,
+        const string delims) {
+  cv::Mat cv_img;
+  string line, token;
+  size_t start = 0, end = 0, nrows = 0;
+  cv::Mat tmp, curline;
+
+  std::ifstream ifs( filename.c_str() );
+  if ( !ifs.is_open()) {
+    LOG(ERROR) << "Could not open or find file " << filename;
+    return cv_img;
+  }
+
+  // read in each line from the file
+  while ( getline( ifs, line )) {
+    ++nrows;
+    start = line.find_first_not_of( delims, 0 );
+
+    do { // tokenize the line
+      end = line.find_first_of( delims, start );
+      token = line.substr( start, end - start );
+      curline.push_back( atoi( token.c_str() ));
+
+      if ( end == string::npos ) break;
+      start = line.find_first_not_of( delims, end );
+    } while ( true );
+
+    tmp.push_back( curline );
+    curline.resize( 0 ); // clear curline
+  }
+
+  cv_img = tmp.reshape( 1, nrows );
+
+  return cv_img;
+}
+
+#endif  // USE_OPENCV
+
+
 // Do the file extension and encoding match?
-static bool matchExt(const std::string & fn,
+bool matchExt(const std::string & fn,
                      std::string en) {
   size_t p = fn.rfind('.');
-  std::string ext = p != fn.npos ? fn.substr(p) : fn;
+  std::string ext = p != fn.npos ? fn.substr(p+1) : fn;
   std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
   std::transform(en.begin(), en.end(), en.begin(), ::tolower);
   if ( ext == en )
@@ -140,7 +201,6 @@ bool ReadImageToDatum(const string& filename, const int label,
     return false;
   }
 }
-#endif  // USE_OPENCV
 
 bool ReadFileToDatum(const string& filename, const int label,
     Datum* datum) {

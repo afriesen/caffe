@@ -8,6 +8,11 @@
 
 namespace caffe {
 
+#ifdef USE_STATIC_CONV_COL_BUFFER
+template <typename Dtype>
+Blob<Dtype> BaseConvolutionLayer<Dtype>::col_buffer_;
+#endif
+
 template <typename Dtype>
 void BaseConvolutionLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
