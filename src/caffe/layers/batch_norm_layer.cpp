@@ -11,6 +11,7 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   BatchNormParameter param = this->layer_param_.batch_norm_param();
   moving_average_fraction_ = param.moving_average_fraction();
+  CHECK(moving_average_fraction_ >= 0 && moving_average_fraction_ <= 1);
   use_global_stats_ = this->phase_ == TEST;
   if (param.has_use_global_stats())
     use_global_stats_ = param.use_global_stats();
@@ -19,6 +20,7 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   else
     channels_ = bottom[0]->shape(1);
   eps_ = param.eps();
+  update_global_stats_ = param.update_global_stats();
   if (this->blobs_.size() > 0) {
     LOG(INFO) << "Skipping parameter initialization";
   } else {
@@ -34,14 +36,14 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
                 this->blobs_[i]->mutable_cpu_data());
     }
   }
-  // Mask statistics from optimization by setting local learning rates
-  // for mean, variance, and the bias correction to zero.
-  CHECK_EQ(this->layer_param_.param_size(), 0)
-      << "Cannot configure batch normalization statistics as layer parameters.";
-  for (int i = 0; i < this->blobs_.size(); ++i) {
-    ParamSpec* fixed_param_spec = this->layer_param_.add_param();
-    fixed_param_spec->set_lr_mult(0.);
-  }
+//  // Mask statistics from optimization by setting local learning rates
+//  // for mean, variance, and the bias correction to zero.
+//  CHECK_EQ(this->layer_param_.param_size(), 0)
+//      << "Cannot configure batch normalization statistics as layer parameters.";
+//  for (int i = 0; i < this->blobs_.size(); ++i) {
+//    ParamSpec* fixed_param_spec = this->layer_param_.add_param();
+//    fixed_param_spec->set_lr_mult(0.);
+//  }
 }
 
 template <typename Dtype>
@@ -118,8 +120,8 @@ void BatchNormLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       spatial_dim, 1, -1, num_by_chans_.cpu_data(),
       spatial_sum_multiplier_.cpu_data(), 1., top_data);
 
-  if (!use_global_stats_) {
-    // compute variance using var(X) = E((X-EX)^2)
+  if (use_global_stats_ && this->phase_ == TRAIN && update_global_stats_) {
+    // Compute variance using var(X) = E((X-EX)^2)
     caffe_powx(top[0]->count(), top_data, Dtype(2),
         temp_.mutable_cpu_data());  // (X-EX)^2
     caffe_cpu_gemv<Dtype>(CblasNoTrans, channels_ * num, spatial_dim,

@@ -222,7 +222,7 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       }
 
       if (!cv_img_seg[1].data) {
-	    DLOG(INFO) << "Fail to load seg: " << root_folder + lines_[lines_id_].second;
+	DLOG(INFO) << "Fail to load seg: " << root_folder + lines_[lines_id_].second;
       }
     }
     else if (label_type == ImageDataParameter_LabelType_IMAGE) {
@@ -248,8 +248,8 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     this->transformed_label_.set_cpu_data(top_label + offset);
 
     this->data_transformer_->TransformImgAndSeg(cv_img_seg, 
-	  &(this->transformed_data_), &(this->transformed_label_),
-	  ignore_label);
+	 &(this->transformed_data_), &(this->transformed_label_),
+	 ignore_label);
     trans_time += timer.MicroSeconds();
 
     // go to the next std::vector<int>::iterator iter;
