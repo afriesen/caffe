@@ -10,7 +10,7 @@ message Grammar {
     }
 
     // the ID of the symbol; necessary for the productions to reference symbols efficiently
-    required int32 id = 1;
+    required int32 ID = 1;
 
     // the optional name of this symbol (very useful for understanding the grammar)
     optional string name = 2 [default = ''];
@@ -20,12 +20,12 @@ message Grammar {
 
   // a production in this grammar (looks like A -> B1,B2,...,Bk)
   message Production {
-    required int32 id = 1;
+    required int32 ID = 1;
     optional string name = 2 [default = ''];
 
-    // the head symbol (A) and body (B1, ... Bk) of this production
-    required Symbol.id head = 3;
-    repeated Symbol.id body = 4;
+    // the head symbol ID (A) and body IDs (B1, ... Bk) of this production
+    required int32 headID = 3;
+    repeated int32 bodyIDs = 4;
   }
 
   // the list of symbols and productions in the grammar
