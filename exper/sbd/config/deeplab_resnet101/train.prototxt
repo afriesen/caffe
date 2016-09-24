@@ -12,10 +12,9 @@ layer {
   transform_param {
     mirror: true
 #    crop_size: 321
-#    crop_height: 165
-#    crop_width: 230
-    crop_height: 161
-    crop_width: 225
+#    crop_height: 161
+#    crop_width: 225
+    crop_size: 161
     mean_value: 104.008
     mean_value: 116.669
     mean_value: 122.675
