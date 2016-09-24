@@ -167,10 +167,6 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   CHECK(batch->data_.count());
   CHECK(this->transformed_data_.count());
 
-  Dtype* top_data     = batch->data_.mutable_cpu_data();
-  Dtype* top_label    = batch->label_.mutable_cpu_data(); 
-  Dtype* top_data_dim = batch->dim_.mutable_cpu_data();
-
   const int max_height = batch->data_.height();
   const int max_width  = batch->data_.width();
 
@@ -186,11 +182,29 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   const int lines_size = lines_.size();
   int top_data_dim_offset;
 
+  // Reshape according to the first image of each batch
+  // on single input batches allows for inputs of varying dimension.
+  cv::Mat cv_img = ReadImageToCVMat(root_folder + lines_[lines_id_].first,
+          new_height, new_width, is_color);
+  CHECK(cv_img.data) << "Could not load " << lines_[lines_id_].first;
+  // Use data_transformer to infer the expected blob shape from a cv_img.
+  vector<int> top_shape = this->data_transformer_->InferBlobShape(cv_img);
+  this->transformed_data_.Reshape(top_shape);
+  this->transformed_label_.Reshape(top_shape[0], 1, top_shape[2], top_shape[3]);
+//  LOG(INFO) << "reshaping like image " << lines_[lines_id_].first << ": " << top_shape[0] << ", " << top_shape[1] << ", " << top_shape[2] << ", " << top_shape[3];
+  // Reshape batch according to the batch_size.
+  top_shape[0] = batch_size;
+  batch->data_.Reshape(top_shape);
+  batch->label_.Reshape(top_shape[0], 1, top_shape[2], top_shape[3]);
+
+  Dtype* top_data     = batch->data_.mutable_cpu_data();
+  Dtype* top_label    = batch->label_.mutable_cpu_data(); 
+  Dtype* top_data_dim = batch->dim_.mutable_cpu_data();
+
   for (int item_id = 0; item_id < batch_size; ++item_id) {
     top_data_dim_offset = batch->dim_.offset(item_id);
-
     std::vector<cv::Mat> cv_img_seg;
-
+    
     // get a blob
     timer.Start();
     CHECK_GT(lines_size, lines_id_);
@@ -198,6 +212,8 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     int img_row, img_col;
     cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].first,
 	  new_height, new_width, is_color, &img_row, &img_col));
+
+//LOG(INFO) << "loaded image: " << root_folder + lines_[lines_id_].first << " with size " << cv_img_seg.back().rows << " x " << cv_img_seg.back().cols;
 
     // TODO(jay): implement resize in ReadImageToCVMat
     // NOTE data_dim may not work when min_scale and max_scale != 1
@@ -211,12 +227,16 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       if (matchExt(lines_[lines_id_].second, "txt")
           || matchExt(lines_[lines_id_].second, "csv")) {
         cv::Mat lbls = ReadCSVToCVMat(root_folder + lines_[lines_id_].second);
+        CHECK_EQ(lbls.rows, cv_img_seg[0].rows);
+        CHECK_EQ(lbls.cols, cv_img_seg[0].cols);
+//        LOG(INFO) << "loaded labels from " << lines_[lines_id_].second << " with size " << lbls.rows << " x " << lbls.cols;
+        cv::Mat lbls2;
         lbls.setTo(255, lbls < 0); // ensure negative labels are properly converted
-        lbls.convertTo(lbls, CV_8U);
+        lbls.convertTo(lbls2, CV_8U);
         if (new_height > 0 && new_width > 0) {
-            cv::resize(lbls, lbls, cv::Size(new_width, new_height), 0, 0, cv::INTER_NEAREST);
+            cv::resize(lbls2, lbls2, cv::Size(new_width, new_height), 0, 0, cv::INTER_NEAREST);
         }
-        cv_img_seg.push_back(lbls);
+        cv_img_seg.push_back(lbls2);
       } else {
         cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].second,
 		  			    new_height, new_width, false));
@@ -244,15 +264,12 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     int offset;
     offset = batch->data_.offset(item_id);
     this->transformed_data_.set_cpu_data(top_data + offset);
-
     offset = batch->label_.offset(item_id);
     this->transformed_label_.set_cpu_data(top_label + offset);
-
     this->data_transformer_->TransformImgAndSeg(cv_img_seg, 
 	 &(this->transformed_data_), &(this->transformed_label_),
 	 ignore_label);
     trans_time += timer.MicroSeconds();
-
     // go to the next std::vector<int>::iterator iter;
     lines_id_++;
     if (lines_id_ >= lines_size) {

@@ -21796,7 +21796,7 @@ layer {
   name: "fc1_interp"
   type: "Interp"
   bottom: "fc_fusion"
-  bottom: "data"
+  bottom: "data"  #resize to the same size as the data layer
   top: "fc1_interp"
   interp_param {
 #    zoom_factor: 8
@@ -21813,21 +21813,21 @@ layer {
 #   }
 # }
 
-#layer {
-#   name: "fc1_mat"
-#   type: "MatWrite"
-# #  bottom: "fc1_interp_argmax"
-#   bottom: "fc1_interp"
-#   include {
-#     phase: TEST
-#   }
-#   mat_write_param {
-#     prefix: "${FEATURE_DIR}/${TEST_SET}/fc1/"
-#     source: "${EXP}/list/${TEST_SET}_id.txt"
-#     strip: 0
-#     period: 1
-#   }
-# }
+layer {
+   name: "fc1_mat"
+   type: "MatWrite"
+ #  bottom: "fc1_interp_argmax"
+   bottom: "fc1_interp"
+   include {
+     phase: TEST
+   }
+   mat_write_param {
+     prefix: "${FEATURE_DIR}/${TEST_SET}/fc1/"
+     source: "${EXP}/list/${TEST_SET}_id.txt"
+     strip: 0
+     period: 1
+   }
+ }
 
 layer {
   name: "accuracy"
