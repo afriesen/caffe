@@ -129,6 +129,7 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
       this->prefetch_[i].label_.Reshape(batch_size, 1, height, width);
     }
   }
+
   // image dimensions, for each image, stores (img_height, img_width)
   top[2]->Reshape(batch_size, 1, 1, 2);
   for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
