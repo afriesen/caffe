@@ -134,13 +134,13 @@ if [ ${RUN_TRAIN2} -eq 1 ]; then
     #
     LIST_DIR=${EXP}/list
     TRAIN_SET=trainval${TRAIN_SET_SUFFIX}${FOLD_SUFFIX}
-    if [ -z ${TRAIN_SET_WEAK_LEN} ]; then
-				TRAIN_SET_WEAK=${TRAIN_SET}_diff_${TRAIN_SET_STRONG}
-				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
-    else
-				TRAIN_SET_WEAK=${TRAIN_SET}_diff_${TRAIN_SET_STRONG}_head${TRAIN_SET_WEAK_LEN}
-				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
-    fi
+#    if [ -z ${TRAIN_SET_WEAK_LEN} ]; then
+#				TRAIN_SET_WEAK=${TRAIN_SET}_diff_${TRAIN_SET_STRONG}
+#				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
+#    else
+#				TRAIN_SET_WEAK=${TRAIN_SET}_diff_${TRAIN_SET_STRONG}_head${TRAIN_SET_WEAK_LEN}
+#				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
+#    fi
     #
     MODEL=${EXP}/model/${NET_ID}/init2${FOLD_SUFFIX}.caffemodel
     if [ ! -f ${MODEL} ]; then
