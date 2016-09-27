@@ -1,0 +1,1 @@
+images/0102234.jpg labels/0102234.regions.txt
