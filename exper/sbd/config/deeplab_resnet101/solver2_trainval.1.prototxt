@@ -1,4 +1,4 @@
-train_net: "${EXP}/config/${NET_ID}/train_${TRAIN_SET}.prototxt"
+train_net: "sbd/config/deeplab_resnet101/train_trainval.1.prototxt"
 
 iter_size: 10
 lr_policy: "poly"
@@ -14,5 +14,5 @@ weight_decay: 0.0005
 
 #snapshot: 10000
 snapshot: 2000
-snapshot_prefix: "${EXP}/model/${NET_ID}/train2${FOLD_SUFFIX}"
+snapshot_prefix: "sbd/model/deeplab_resnet101/train2.1"
 solver_mode: GPU
