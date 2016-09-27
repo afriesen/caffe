@@ -703,8 +703,8 @@ vector<int> DataTransformer<Dtype>::InferBlobShape(const cv::Mat& cv_img) {
   const int img_width = cv_img.cols;
   // Check dimensions.
   CHECK_GT(img_channels, 0);
-  CHECK_GE(img_height, crop_size);
-  CHECK_GE(img_width, crop_size);
+//  CHECK_GE(img_height, crop_size);
+//  CHECK_GE(img_width, crop_size);
   // Build BlobShape.
   vector<int> shape(4);
   shape[0] = 1;
