@@ -1,38 +1,50 @@
 syntax = "proto2";
 
-package caffe;
-
-message Grammar {
-  message Symbol {
-    enum Type {
-      Terminal = 0;
-      Nonterminal = 1;
-    }
-
-    // the ID of the symbol; necessary for the productions to reference symbols efficiently
-    required int32 ID = 1;
-
-    // the optional name of this symbol (very useful for understanding the grammar)
-    optional string name = 2 [default = ''];
-
-    required Type type = 3;
-  }
-
-  // a production in this grammar (looks like A -> B1,B2,...,Bk)
-  message Production {
-    required int32 ID = 1;
-    optional string name = 2 [default = ''];
-
-    // the head symbol ID (A) and body IDs (B1, ... Bk) of this production
-    required int32 headID = 3;
-    repeated int32 bodyIDs = 4;
-  }
-
-  // the list of symbols and productions in the grammar
-  repeated Symbol symbols = 1;
-  repeated Production productions = 2;
-
-  // the weights that parameterize this grammar
-  repeated float weights = 3 [packed = true];
-}
-
+//package caffe;
+//
+//message GrammarParameter {
+//  message Symbol {
+//    enum Type {
+//      Terminal = 0;
+//      Nonterminal = 1;
+//    }
+//
+//    // the ID of the symbol; necessary for the productions to reference symbols
+//    required int32 ID = 1;
+//    optional string name = 2 [default = ''];
+//    required Type type = 3;
+//
+//    // the output label ID that this terminal symbol corresponds to
+//    // (only relevant for Terminal symbols)
+//    optional int32 labelID = 4;
+//  }
+//
+//  // a production in this grammar (looks like A -> B1,B2,...,Bk)
+//  message Production {
+//    required int32 ID = 1;
+//    optional string name = 2 [default = ''];
+//
+//    // the head symbol ID (A) and body IDs (B1, ... Bk) of this production
+//    required int32 headID = 3;
+//    repeated int32 bodyIDs = 4;
+//  }
+//
+//  // the list of symbols and productions in the grammar
+//  repeated Symbol symbols = 1;
+//  repeated Production productions = 2;
+//
+//  // the weights that parameterize this grammar
+//  repeated float production_weights = 3 [packed = true];
+//  repeated float boundary_weights = 4 [packed = true];
+//}
+//
+//message SSPNParameter {
+//  // the grammar that defines the structure of this SSPN
+//  required Grammar grammar = 1;
+//
+//  // the maximum number of inference iterations over the grammar to perform per image
+//  optional int32 max_iterations = 2 [default = 10];
+//
+//  // number of expansion iterations to perform for each production in the grammar in each iteration
+//  optional int32 expansion_iterations_per_production = 3 [default = 1];
+//}

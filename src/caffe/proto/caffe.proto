@@ -306,7 +306,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 152 (last added: mat_read_param) -- but 150 is still open too
+// LayerParameter next available layer-specific ID: 152 (last added: mat_read_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -403,6 +403,7 @@ message LayerParameter {
   optional SoftmaxParameter softmax_param = 125;
   optional SPPParameter spp_param = 132;
   optional SliceParameter slice_param = 126;
+  optional SSPNParameter sspn_param = 150;
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
@@ -856,6 +857,11 @@ message InterpParameter {
   optional int32 shrink_factor = 4 [default = 1]; // shrink factor
   optional int32 pad_beg = 5 [default = 0]; // padding at begin of input
   optional int32 pad_end = 6 [default = 0]; // padding at end of input
+  enum InterpType {
+    Bilinear = 0;
+    NearestNeighbor = 1;
+  }
+  optional InterpType type = 7 [default = Bilinear]; // the type of interpolation to perform
 }
 
 // Message that stores parameters used by LogLayer
@@ -1183,6 +1189,54 @@ message SoftmaxParameter {
   // from the end (e.g., -1 for the last axis).
   // Any other axes will be evaluated as independent softmaxes.
   optional int32 axis = 2 [default = 1];
+}
+
+message GrammarParameter {
+
+  message Symbol {
+    enum Type {
+      Terminal = 0;
+      Nonterminal = 1;
+    }
+
+    // the ID of the symbol; necessary for the productions to reference symbols
+    required int32 id = 1;
+    optional string name = 2 [default = ''];
+    required Type type = 3;
+
+    // the output label ID that this terminal symbol corresponds to
+    // (only relevant for Terminal symbols)
+    optional int32 label_id = 4;
+  }
+
+  // a production in this grammar (looks like A -> B1,B2,...,Bk)
+  message Production {
+    required int32 id = 1;
+    optional string name = 2 [default = ''];
+
+    // the head symbol ID (A) and body IDs (B1, ... Bk) of this production
+    required int32 head_id = 3;
+    repeated int32 body_ids = 4;
+  }
+
+  // the list of symbols and productions in the grammar
+  repeated Symbol symbols = 1;
+  repeated Production productions = 2;
+
+  // the weights that parameterize this grammar
+  repeated float production_weights = 3 [packed = true];
+  repeated float boundary_weights = 4 [packed = true];
+}
+
+message SSPNParameter {
+  // the grammar that defines the structure of this SSPN
+  required GrammarParameter grammar = 1;
+
+  // the maximum number of inference iterations over the grammar to perform per image
+  optional int32 max_iterations = 2 [default = 10];
+
+  // number of expansion iterations to perform for each production in the grammar in each iteration
+  optional int32 expansion_iterations_per_production = 3 [default = 1];
 }
 
 message TanHParameter {
