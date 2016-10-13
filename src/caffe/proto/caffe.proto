@@ -1232,11 +1232,14 @@ message SSPNParameter {
   // the grammar that defines the structure of this SSPN
   required GrammarParameter grammar = 1;
 
-  // the maximum number of inference iterations over the grammar to perform per image
+  // max number of inference iterations per image
   optional int32 max_iterations = 2 [default = 10];
 
-  // number of expansion iterations to perform for each production in the grammar in each iteration
+  // number of expansion iterations for each production in the grammar in each iteration
   optional int32 expansion_iterations_per_production = 3 [default = 1];
+
+  optional FillerParameter production_weight_filler = 4; // The filler for the production weights
+  optional FillerParameter boundary_weight_filler = 5; // The filler for the boundary weights
 }
 
 message TanHParameter {
