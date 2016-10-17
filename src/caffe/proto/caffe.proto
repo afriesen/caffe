@@ -1216,16 +1216,16 @@ message GrammarParameter {
 
     // the head symbol ID (A) and body IDs (B1, ... Bk) of this production
     required int32 head_id = 3;
-    repeated int32 body_ids = 4;
+    repeated int32 body_id = 4;
   }
 
   // the list of symbols and productions in the grammar
-  repeated Symbol symbols = 1;
-  repeated Production productions = 2;
+  repeated Symbol symbol = 1;
+  repeated Production production = 2;
 
-  // the weights that parameterize this grammar
-  repeated float production_weights = 3 [packed = true];
-  repeated float boundary_weights = 4 [packed = true];
+//  // the weights that parameterize this grammar
+//  repeated float production_weights = 3 [packed = true];
+//  repeated float boundary_weights = 4 [packed = true];
 }
 
 message SSPNParameter {
