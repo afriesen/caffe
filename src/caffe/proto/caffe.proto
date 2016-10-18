@@ -1222,10 +1222,6 @@ message GrammarParameter {
   // the list of symbols and productions in the grammar
   repeated Symbol symbol = 1;
   repeated Production production = 2;
-
-//  // the weights that parameterize this grammar
-//  repeated float production_weights = 3 [packed = true];
-//  repeated float boundary_weights = 4 [packed = true];
 }
 
 message SSPNParameter {
@@ -1240,6 +1236,20 @@ message SSPNParameter {
 
   optional FillerParameter production_weight_filler = 4; // The filler for the production weights
   optional FillerParameter boundary_weight_filler = 5; // The filler for the boundary weights
+
+  enum PairwiseFeatures {
+    PixelIntensity = 0;
+    TextonBoost = 1;
+    Input = 2;
+  }
+
+  // the features to use for pairwise terms (take the squared L2 norm of each pair of neighbors)
+  required PairwiseFeatures pairwise_features = 6;
+
+  // all pairwise terms get multiplied by this factor
+  optional float pairwise_factor_multiplier = 7 [default = 1];
+//  optional bool divide_feature_norms_by_average_image_contrast = 8 [default = true];
+//  optional bool divide_feature_norms_by_average_feature_norm = 9 [default = false];
 }
 
 message TanHParameter {
