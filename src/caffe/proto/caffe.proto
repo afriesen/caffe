@@ -1253,6 +1253,9 @@ message SSPNParameter {
 
   // the number of threads to use for inference (numthreads <= 0 --> num_threads = min(cv::getNumThreads(), batch_size))
   optional int32 num_threads = 8 [default = 1];
+
+  // the number of times to restart inference during training to more robustly estimate parameters
+  optional int32 num_restarts = 9 [default = 1];
 }
 
 message TanHParameter {
