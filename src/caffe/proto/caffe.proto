@@ -1260,6 +1260,14 @@ message SSPNParameter {
   // true to change the symbol costs of restarts to push the next sample's MAP away from all
   // previous ones (see Yadollahpour et al, NIPS Workshop 2011)
   optional bool use_m_best_diverse_samples = 10 [default = false];
+
+  // specify the percentage of the current symbol cost's standard deviation to add to the previous
+  // labeling in order to force diversity of samples (default = 2%)
+  optional float pct_of_std_to_add_for_diversity = 11 [default = 0.02];
+
+  // true to weight the contribution of each MAP sample by its exp(-energy), normalized by the sum
+  // over this value for all samples
+  optional bool weight_restarts_by_prob = 12 [default = false];
 }
 
 message TanHParameter {
