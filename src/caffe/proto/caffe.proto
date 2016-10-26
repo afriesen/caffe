@@ -1256,6 +1256,10 @@ message SSPNParameter {
 
   // the number of times to restart inference during training to more robustly estimate parameters
   optional int32 num_restarts = 9 [default = 1];
+
+  // true to change the symbol costs of restarts to push the next sample's MAP away from all
+  // previous ones (see Yadollahpour et al, NIPS Workshop 2011)
+  optional bool use_m_best_diverse_samples = 10 [default = false];
 }
 
 message TanHParameter {
