@@ -1,6 +1,8 @@
 train_net: "${EXP}/config/${NET_ID}/train_${TRAIN_SET}.prototxt"
 
-iter_size: 10
+#iter_size: 10
+#iter_size: 5 
+iter_size: 2 
 lr_policy: "poly"
 power: 0.9
 #base_lr: 2.5e-4

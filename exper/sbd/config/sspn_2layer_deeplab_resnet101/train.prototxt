@@ -28,7 +28,8 @@ layer {
     root_folder: "${DATA_ROOT}"
     source: "${EXP}/list/${TRAIN_SET}.txt"
 #    source: "${DATA_ROOT}/folds/${TRAIN_SET}.txt"
-    batch_size: 1
+#    batch_size: 1
+    batch_size: 5
     shuffle: true
     label_type: PIXEL
   }
@@ -22024,7 +22025,11 @@ layer {
       production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
+    use_m_best_diverse_samples: true
+    pct_of_std_to_add_for_diversity: 0.02
   }
 }
 
@@ -22098,7 +22103,11 @@ layer {
       production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
+    use_m_best_diverse_samples: true
+    pct_of_std_to_add_for_diversity: 0.02
   }
 }
 layer {
@@ -22172,7 +22181,11 @@ layer {
       production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
+    use_m_best_diverse_samples: true
+    pct_of_std_to_add_for_diversity: 0.02
   }
 }
 layer {
@@ -22266,7 +22279,11 @@ layer {
       production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
+    use_m_best_diverse_samples: true
+    pct_of_std_to_add_for_diversity: 0.02
   }
 }
 layer {
