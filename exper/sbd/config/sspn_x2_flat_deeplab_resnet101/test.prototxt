@@ -21903,7 +21903,7 @@ layer {
     pairwise_features: PixelIntensity
 #    pairwise_features: TextonBoost
 #    pairwise_features: Input
-#    pairwise_factor_multiplier: 4
+    pairwise_factor_multiplier: 4
 #    pairwise_factor_multiplier: 8
 #    pairwise_factor_multiplier: 12
 #    pairwise_factor_multiplier: 16
@@ -21911,13 +21911,8 @@ layer {
 #    pairwise_factor_multiplier: 64 
 #    pairwise_factor_multiplier: 128
 #    pairwise_factor_multiplier: 192 
+#    pairwise_factor_multiplier: 1024
 #    pairwise_factor_multiplier: 256 
-#    pairwise_factor_multiplier: 320
-#    pairwise_factor_multiplier: 512
-    pairwise_factor_multiplier: 1024
-#    pairwise_factor_multiplier: 1536
-#    pairwise_factor_multiplier: 2048
-#    pairwise_factor_multiplier: 4096
 #    pairwise_factor_multiplier: 0 
 #    pairwise_factor_multiplier: 0.5
     grammar {

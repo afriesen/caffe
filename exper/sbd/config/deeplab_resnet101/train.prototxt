@@ -28,7 +28,8 @@ layer {
     root_folder: "${DATA_ROOT}"
     source: "${EXP}/list/${TRAIN_SET}.txt"
 #    source: "${DATA_ROOT}/folds/${TRAIN_SET}.txt"
-    batch_size: 1
+    batch_size: 2
+#    batch_size: 5
     shuffle: true
     label_type: PIXEL
   }

@@ -28,7 +28,9 @@ layer {
     root_folder: "${DATA_ROOT}"
     source: "${EXP}/list/${TRAIN_SET}.txt"
 #    source: "${DATA_ROOT}/folds/${TRAIN_SET}.txt"
-    batch_size: 1
+    batch_size: 2
+#    batch_size: 3
+#    batch_size: 5
     shuffle: true
     label_type: PIXEL
   }
@@ -21988,11 +21990,13 @@ layer {
   top: "sspn_loss"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0 } # boundary factors for production 0 -- share params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    pairwise_factor_multiplier: 64
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
@@ -22010,7 +22014,9 @@ layer {
       }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
   }
 }
 
@@ -22026,7 +22032,7 @@ layer {
   }
 }
 
-############## add supervsion to fc1's directly ##########
+############## add supervision to fc1's directly ##########
 ## resolution 1
 #layer {
 #  name: "loss_res1"
@@ -22048,11 +22054,13 @@ layer {
   top: "sspn_loss_res1"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0 } # boundary factors for production 0 -- share params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    pairwise_factor_multiplier: 64
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
@@ -22070,7 +22078,9 @@ layer {
       }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
   }
 }
 layer {
@@ -22108,11 +22118,13 @@ layer {
   top: "sspn_loss_res075"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0 } # boundary factors for production 0 -- share params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    pairwise_factor_multiplier: 64
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
@@ -22130,7 +22142,9 @@ layer {
       }
     }  
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
   }
 }
 layer {
@@ -22188,11 +22202,13 @@ layer {
   top: "sspn_loss_res05"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- shared params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- shared params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0.0 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0.0 } # boundary factors for production 0 -- shared params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+ #   pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    pairwise_factor_multiplier: 64
     grammar {
       symbol { id: 0 name: "Scene"       type: Nonterminal }
       symbol { id: 1 name: "Sky"         type: Terminal label_id: 0 }
@@ -22210,7 +22226,9 @@ layer {
       }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+    num_restarts: 10
   }
 }
 layer {

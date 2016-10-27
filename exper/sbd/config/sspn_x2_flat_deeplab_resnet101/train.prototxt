@@ -5,23 +5,31 @@ layer {
   type: "ImageSegData"
   top: "data"
   top: "label"
-  top: "data_dim"
+  #top: "data_dim"
   include {
-    phase: TEST
+    phase: TRAIN
   }
   transform_param {
-    mirror: false
-#    crop_size: 513
+    mirror: true
+#    crop_size: 321
+#    crop_height: 161
+#    crop_width: 225
+    crop_size: 161
     mean_value: 104.008
     mean_value: 116.669
     mean_value: 122.675
+    scale_factors: 0.5
+    scale_factors: 0.75
+    scale_factors: 1
+    scale_factors: 1.25
+    scale_factors: 1.5
   }
   image_data_param {
     root_folder: "${DATA_ROOT}"
-    source: "${EXP}/list/${TEST_SET}.txt"
-#    source: "${DATA_ROOT}/folds/${TEST_SET}.txt"
-    batch_size: 1
-#    label_type: NONE
+    source: "${EXP}/list/${TRAIN_SET}.txt"
+#    source: "${DATA_ROOT}/folds/${TRAIN_SET}.txt"
+    batch_size: 5
+    shuffle: true
     label_type: PIXEL
   }
 }
@@ -21480,15 +21488,27 @@ layer {
   top: "fc1_${EXP}_c0"
   param {
     name: "fc1_${EXP}_c0_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c0_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     pad: 6
     dilation: 6
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21499,15 +21519,27 @@ layer {
   top: "fc1_${EXP}_c1"
   param {
     name: "fc1_${EXP}_c1_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c1_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 12
     pad: 12
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21518,15 +21550,27 @@ layer {
   top: "fc1_${EXP}_c2"
   param {
     name: "fc1_${EXP}_c2_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c2_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 18
     pad: 18
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21537,15 +21581,27 @@ layer {
   top: "fc1_${EXP}_c3"
   param {
     name: "fc1_${EXP}_c3_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c3_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 24
     pad: 24
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21573,15 +21629,27 @@ layer {
   top: "fc1_${EXP}_res05_c0"
   param {
     name: "fc1_${EXP}_c0_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c0_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     pad: 6
     dilation: 6
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21592,15 +21660,27 @@ layer {
   top: "fc1_${EXP}_res05_c1"
   param {
     name: "fc1_${EXP}_c1_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c1_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 12
     pad: 12
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 layer {
@@ -21610,15 +21690,27 @@ layer {
   top: "fc1_${EXP}_res05_c2"
   param {
     name: "fc1_${EXP}_c2_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c2_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 18
     pad: 18
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 layer {
@@ -21628,15 +21720,27 @@ layer {
   top: "fc1_${EXP}_res05_c3"
   param {
     name: "fc1_${EXP}_c3_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c3_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 24
     pad: 24
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21665,15 +21769,27 @@ layer {
   top: "fc1_${EXP}_res075_c0"
   param {
     name: "fc1_${EXP}_c0_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c0_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     pad: 6
     dilation: 6
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21684,15 +21800,27 @@ layer {
   top: "fc1_${EXP}_res075_c1"
   param {
     name: "fc1_${EXP}_c1_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c1_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 12
     pad: 12
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21703,15 +21831,27 @@ layer {
   top: "fc1_${EXP}_res075_c2"
   param {
     name: "fc1_${EXP}_c2_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c2_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 18
     pad: 18
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21722,15 +21862,27 @@ layer {
   top: "fc1_${EXP}_res075_c3"
   param {
     name: "fc1_${EXP}_c3_w"
+    lr_mult: 10
+    decay_mult: 1
   }
   param {
     name: "fc1_${EXP}_c3_b"
+    lr_mult: 20
+    decay_mult: 0
   }
   convolution_param {
     num_output: ${NUM_LABELS}
     kernel_size: 3
     dilation: 24
     pad: 24
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
   }
 }
 
@@ -21748,63 +21900,75 @@ layer {
     operation: SUM
   }
 }
+
+################## downsample data and labels ####################
+#layer {
+#  bottom: "data"
+#  top: "data_shrink"
+#  name: "data_shrink"
+#  type: "Interp"
+#  interp_param {
+##    shrink_factor: 8
+#    shrink_factor: 2
+#    pad_beg: 0
+#    pad_end: 0
+#  }
+#}
+#
+#layer {
+#  bottom: "label"
+#  top: "label_shrink"
+#  name: "label_shrink"
+#  type: "Interp"
+#  interp_param {
+##    shrink_factor: 8
+#    shrink_factor: 2
+#    pad_beg: 0
+#    pad_end: 0
+#  }
+#}
+
 ############### upsampling ##################
 layer {
   bottom: "fc1_${EXP}_res05"
-#  bottom: "data_res05_input_dims"
-  bottom: "fc1_${EXP}"
   top: "fc1_${EXP}_res05_interp"
   name: "fc1_${EXP}_res05_interp"
   type: "Interp"
-  interp_param {
+#  bottom: "data_shrink" # rescale to same height and width as data_shrink
+  bottom: "data" # rescale to same height and width as data
+#  interp_param {
 #    zoom_factor: 2
-    pad_beg: 0
-    pad_end: 0
-  }
+#    pad_beg: 0
+#    pad_end: 0
+#  }
 }
 layer {
   bottom: "fc1_${EXP}_res075"
-#  bottom: "data_res075_input_dims"
-  bottom: "fc1_${EXP}"
   top: "fc1_${EXP}_res075_interp"
   name: "fc1_${EXP}_res075_interp"
   type: "Interp"
-  interp_param {
+#  bottom: "data_shrink" # rescale to same height and width as data_shrink
+  bottom: "data" # rescale to same height and width as data
+#  interp_param {
 #    zoom_factor: 4
 #    shrink_factor: 3    
-    pad_beg: 0
-    pad_end: 0
-  }
-}
-
-#### upsample the feature layers ####
-layer {
-  name: "feat_res05_interp"
-  bottom: "res5c_res05"
-  bottom: "res5c" # upscale to the same dimensions as this input layer
-  top: "feat_res05_interp"
-  type: "Interp"
-  interp_param {
-    pad_beg: 0
-    pad_end: 0
-  }
+#    pad_beg: 0
+#    pad_end: 0
+#  }
 }
 
 layer {
-  name: "feat_res075_interp"
-  bottom: "res5c_res075"
-  bottom: "res5c" # upscale to the same dimensions as this input layer
-  top: "feat_res075_interp"
+  bottom: "fc1_${EXP}"
+  top: "fc1_${EXP}_interp"
+  name: "fc1_${EXP}_interp"
   type: "Interp"
-    interp_param {
-    pad_beg: 0
-    pad_end: 0
-  }
+#  bottom: "data_shrink" # rescale to same height and width as data_shrink
+  bottom: "data" # rescale to same height and width as data
 }
 
 ############### merging multiscale results #####################
 layer {
-  bottom: "fc1_${EXP}"
+  bottom: "fc1_${EXP}_interp"
   bottom: "fc1_${EXP}_res075_interp"
   bottom: "fc1_${EXP}_res05_interp"
   top: "fc_fusion"
@@ -21815,111 +21979,42 @@ layer {
   }
 }
 
-layer {
-  bottom: "res5c"
-  bottom: "feat_res075_interp"
-  bottom: "feat_res05_interp"
-  top: "feat_fusion"
-  name: "feat_fusion"
-  type: "Eltwise"
-  eltwise_param {
-    operation: MAX
-  }
-}
 
-
-##################### original resolution #######################
-layer {
-  name: "fc1_interp"
-  type: "Interp"
-  bottom: "fc_fusion"
-  bottom: "data"  #resize height&width to the same size as the data layer
-  top: "fc1_interp"
-  interp_param {
-#    zoom_factor: 8
-  }
-}
-
-layer {
-  name: "feat_interp"
-  type: "Interp"
-  bottom: "feat_fusion"
-  bottom: "data" #resize height&width to the same size as the data layer
-  top: "feat_interp"
-}
-
-# layer {
-#   bottom: "fc1_interp"
-#   top: "fc1_interp_argmax"
-#   name: "fc1_interp_argmax"
-#   type: "ArgMax"
-#   argmax_param {
-#     axis: 1
-#   }
-# }
+################## compute loss ####################
 
 #layer {
-#   name: "fc1_mat"
-#   type: "MatWrite"
-# #  bottom: "fc1_interp_argmax"
-#   bottom: "fc1_interp"
-#   include {
-#     phase: TEST
-#   }
-#   mat_write_param {
-#     prefix: "${FEATURE_DIR}/${TEST_SET}/fc1/"
-#     source: "${EXP}/list/${TEST_SET}_id.txt"
-#     strip: 0
-#     period: 1
-#   }
-# }
-
-layer {
-  name: "feat_silence"
-  type: "Silence"
-  bottom: "feat_interp"
-}
-
-#layer {
-#  name: "negfc1_interp"
-#  type: "Scale"
-#  bottom: "fc1_interp"
-#  top: "negfc1_interp"
-#  param { lr_mult: 0 decay_mult: 0 }
-#  scale_param { filler { type: "constant" value: -1 } bias_term: false }
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "fc_fusion"
+#  bottom: "label_shrink"
+#  include {
+#    phase: TRAIN
+#  }
+#  loss_param {
+#    ignore_label: 255
+#  }
 #}
 
 layer {
   name: "SSPNloss"
   type: "SSPN"
-  bottom: "data" # input image
-  bottom: "fc1_interp" # input symbol costs
-#  bottom: "negfc1_interp" # input negated symbol costs # TODO: REMOVE THIS
-#  bottom: "feat_interp" # input features, if layer_param specifies it
-#  bottom: "label" # input labels
+#  bottom: "data_shrink"
+  bottom: "data"
+  bottom: "fc_fusion"
+#  bottom: "label_shrink"
+  bottom: "label"
   top: "sspn_MAP"
-#  top: "sspn_loss"
+  top: "sspn_loss"
+  loss_weight: 0
+  loss_weight: 3
+  include { phase: TRAIN }
+  loss_param { ignore_label: 255 }
+  param { name: "production_costs" lr_mult: 10 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-#    pairwise_features: TextonBoost
-#    pairwise_features: Input
-#    pairwise_factor_multiplier: 4
-#    pairwise_factor_multiplier: 8
-#    pairwise_factor_multiplier: 12
-#    pairwise_factor_multiplier: 16
-#    pairwise_factor_multiplier: 32
-#    pairwise_factor_multiplier: 64 
-#    pairwise_factor_multiplier: 128
-#    pairwise_factor_multiplier: 192 
-#    pairwise_factor_multiplier: 256 
-#    pairwise_factor_multiplier: 320
-#    pairwise_factor_multiplier: 512
-    pairwise_factor_multiplier: 1024
-#    pairwise_factor_multiplier: 1536
-#    pairwise_factor_multiplier: 2048
-#    pairwise_factor_multiplier: 4096
-#    pairwise_factor_multiplier: 0 
 #    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
@@ -21936,81 +22031,247 @@ layer {
         body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
       }
     }
+    production_weight_filler { type: "constant" value: 0 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
   }
 }
 
 layer {
   name: "accuracy"
   type: "SegAccuracy"
-#  bottom: "fc1_interp"
+#  bottom: "fc_fusion"
   bottom: "sspn_MAP"
+#  bottom: "label_shrink"
   bottom: "label"
-  top: "fc1_accuracy"
+  top: "accuracy"
   seg_accuracy_param {
     ignore_label: 255
-    reset: false
   }
 }
 
+############## add supervision to fc1's directly ##########
+## resolution 1
+#layer {
+#  name: "loss_res1"
+#  type: "SoftmaxWithLoss"
+#  bottom: "fc1_${EXP}"
+#  bottom: "label_shrink"
+#  loss_param {
+#    ignore_label: 255
+#  }
+#  include: { phase: TRAIN }
+#}
 
 layer {
-  name: "silence"
-  type: "Silence"
+  name: "SSPNloss_res1"
+  type: "SSPN"
+#  bottom: "data_shrink"
+  bottom: "data"
+  bottom: "fc1_${EXP}_interp"
+#  bottom: "label_shrink"
   bottom: "label"
-  bottom: "data_dim"
+  top: "sspn_MAP_res1"
+  top: "sspn_loss_res1"
+  include { phase: TRAIN }
+  loss_param { ignore_label: 255 }
+  param { name: "production_costs" lr_mult: 10 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  sspn_param {
+    pairwise_features: PixelIntensity
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    grammar {
+      symbol { id: 0 name: "Scene"  type: Nonterminal }
+      symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
+      symbol { id: 2 name: "Tree"   type: Terminal label_id: 1 }
+      symbol { id: 3 name: "Road"   type: Terminal label_id: 2 }
+      symbol { id: 4 name: "Grass"  type: Terminal label_id: 3 }
+      symbol { id: 5 name: "Water"  type: Terminal label_id: 4 }
+      symbol { id: 6 name: "Building"  type: Terminal label_id: 5 }
+      symbol { id: 7 name: "Mountain"  type: Terminal label_id: 6 }
+      symbol { id: 8 name: "Foreground"  type: Terminal label_id: 7 }
+      production {
+        id: 0
+        head_id: 0 
+        body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
+      }
+    }
+    production_weight_filler { type: "constant" value: 0 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+  }
 }
 
-# #### crf ###
-# layer {
-#   bottom: "fc1_interp"
-#   bottom: "data_dim"
-#   bottom: "data"
-#   top: "crf_inf"
-#   name: "crf"
-#   type: "DenseCRF"
-#   dense_crf_param { 
-#      max_iter: 10
-#      pos_w: 4
-#      pos_xy_std: 1
-#      bi_w: 5
-#      bi_xy_std: 21
-#      bi_rgb_std: 3
-#  }
-#   include: { phase: TEST }
-# }
-# layer {
-#   bottom: "crf_inf"
-#   top: "crf_inf_argmax"
-#   name: "crf_inf_argmax"
-#   type: "ArgMax"
-#   argmax_param {
-#     axis: 1
-#   }
-# }
-# layer {
-#   name: "crf_mat"
-#   type: "MatWrite"
-#   bottom: "crf_inf_argmax"
-#   include {
-#     phase: TEST
-#   }
-#   mat_write_param {
-#     prefix: "${FEATURE_DIR}/${TEST_SET}/crf/"
-#     source: "${EXP}/list/${TEST_SET}${TEST_SET_POSTFIX}_id.txt"
-#     strip: 0
-#     period: 1
-#   }
-# }
+layer {
+  name: "accuracy_res1"
+  type: "SegAccuracy"
+#  bottom: "fc1_${EXP}"
+  bottom: "sspn_MAP_res1"
+#  bottom: "label_shrink"
+  bottom: "label"
+  top: "accuracy_res1"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
 
-# # add accuracy layer for evaluating val result
-# layer {
-#   name: "crf_accuracy"
-#   type: "SegAccuracy"
-#   bottom: "crf_inf"
-#   bottom: "label"
-#   top: "crf_accuracy"
-#   seg_accuracy_param {
-#     ignore_label: 255
-#     reset: false
-#   }
-# }
+## resolution 3/4
+# interp layer does not support 3/4 scale for ground truth
+# instead we interpolate score map
+#layer {
+#  name: "loss_res075"
+#  type: "SoftmaxWithLoss"
+#  bottom: "fc1_${EXP}_res075_interp"
+#  bottom: "label_shrink"
+#  loss_param {
+#    ignore_label: 255
+#  }
+#  include: { phase: TRAIN }
+#}
+
+layer {
+  name: "SSPNloss_res075"
+  type: "SSPN"
+#  bottom: "data_shrink"
+  bottom: "data"
+  bottom: "fc1_${EXP}_res075_interp"
+#  bottom: "label_shrink"
+  bottom: "label"
+  top: "sspn_MAP_res075"
+  top: "sspn_loss_res075"
+  include { phase: TRAIN }
+  loss_param { ignore_label: 255 }
+  param { name: "production_costs" lr_mult: 10 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  sspn_param {
+    pairwise_features: PixelIntensity
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    grammar {
+      symbol { id: 0 name: "Scene"  type: Nonterminal }
+      symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
+      symbol { id: 2 name: "Tree"   type: Terminal label_id: 1 }
+      symbol { id: 3 name: "Road"   type: Terminal label_id: 2 }
+      symbol { id: 4 name: "Grass"  type: Terminal label_id: 3 }
+      symbol { id: 5 name: "Water"  type: Terminal label_id: 4 }
+      symbol { id: 6 name: "Building"  type: Terminal label_id: 5 }
+      symbol { id: 7 name: "Mountain"  type: Terminal label_id: 6 }
+      symbol { id: 8 name: "Foreground"  type: Terminal label_id: 7 }
+      production {
+        id: 0
+        head_id: 0 
+        body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
+      }
+    }  
+    production_weight_filler { type: "constant" value: 0 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+  }
+}
+layer {
+  name: "accuracy_res075"
+  type: "SegAccuracy"
+#  bottom: "fc1_${EXP}_res075_interp"
+  bottom: "sspn_MAP_res075"
+#  bottom: "label_shrink"
+  bottom: "label"
+  top: "accuracy_res075"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
+
+## resolution 1/2
+#layer {
+#  bottom: "data"
+#  top: "data_shrink4"
+#  name: "data_shrink4"
+#  type: "Interp"
+#  interp_param {
+#    shrink_factor: 4
+#    pad_beg: 0
+#    pad_end: 0
+#  }
+#}
+#layer {
+#  bottom: "label"
+#  top: "label_shrink4"
+#  name: "label_shrink4"
+#  type: "Interp"
+#  interp_param {
+#    shrink_factor: 4
+#    pad_beg: 0
+#    pad_end: 0
+#  }
+#}
+#layer {
+#  bottom: "fc1_${EXP}_res05"
+#  bottom: "data_shrink4" # resize bottom[0] to the size of this bottom blob
+#  type: "Interp"
+#  top: "fc1_${EXP}_res05_interp4"
+#  name: "fc1_${EXP}_res05_interp4"
+#}
+
+#layer {
+#  name: "loss_res05"
+#  type: "SoftmaxWithLoss"
+#  bottom: "fc1_${EXP}_res05"
+#  bottom: "label_shrink16"
+#  loss_param {
+#    ignore_label: 255
+#  }
+#  include: { phase: TRAIN }
+#}
+layer {
+  name: "SSPNloss_res05"
+  type: "SSPN"
+#  bottom: "data_shrink"
+  bottom: "data"
+  bottom: "fc1_${EXP}_res05_interp"
+#  bottom: "label_shrink"
+  bottom: "label"
+  top: "sspn_MAP_res05"
+  top: "sspn_loss_res05"
+  include { phase: TRAIN }
+  loss_param { ignore_label: 255 }
+  param { name: "production_costs" lr_mult: 10 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- shared params with all other SSPN instances
+  sspn_param {
+    pairwise_features: PixelIntensity
+#    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 16 
+    grammar {
+      symbol { id: 0 name: "Scene"       type: Nonterminal }
+      symbol { id: 1 name: "Sky"         type: Terminal label_id: 0 }
+      symbol { id: 2 name: "Tree"        type: Terminal label_id: 1 }
+      symbol { id: 3 name: "Road"        type: Terminal label_id: 2 }
+      symbol { id: 4 name: "Grass"       type: Terminal label_id: 3 }
+      symbol { id: 5 name: "Water"       type: Terminal label_id: 4 }
+      symbol { id: 6 name: "Building"    type: Terminal label_id: 5 }
+      symbol { id: 7 name: "Mountain"    type: Terminal label_id: 6 }
+      symbol { id: 8 name: "Foreground"  type: Terminal label_id: 7 }
+      production {
+        id: 0
+        head_id: 0 
+        body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
+      }
+    }
+    production_weight_filler { type: "constant" value: 0 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
+    num_threads: 0
+  }
+}
+layer {
+  name: "accuracy_res05"
+  type: "SegAccuracy"
+#  bottom: "fc1_${EXP}_res05"
+  bottom: "sspn_MAP_res05"
+#  bottom: "label_shrink"
+  bottom: "label"
+  top: "accuracy_res05"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
+

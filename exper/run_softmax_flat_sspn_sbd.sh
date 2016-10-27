@@ -13,8 +13,7 @@ CAFFE_BIN=${SSPN_DIR}/build/caffe_sspn
 EXP=sbd
 
 if [ "${EXP}" = "sbd" ]; then
-#    NUM_LABELS=8
-    NUM_LABELS=13
+    NUM_LABELS=8
 #    DATA_ROOT=${ROOT_DIR}/rmt/data/pascal/VOCdevkit/VOC2012
 #    DATA_ROOT="/home/afriesen/proj/data/VOCdevkit/VOC2012"
 #    DATA_ROOT="/Users/afriesen/proj/sspn/data/iccv09Data/"
@@ -29,13 +28,13 @@ fi
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
 #NET_ID=deeplab_resnet101
-NET_ID=sspn_2layer_deeplab_resnet101
+NET_ID=sspn_softmax_flat_deeplab_resnet101
 
 FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
 
 USE_GPU=1
-DEV_ID=0
+DEV_ID=1
 
 #####
 
@@ -50,8 +49,8 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=0
-RUN_TEST=1
+RUN_TRAIN=1
+RUN_TEST=0
 RUN_TRAIN2=0
 RUN_TEST2=0
 
@@ -79,14 +78,15 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
         CMD="${CAFFE_BIN} train \
            --solver=${CONFIG_DIR}/solver_${TRAIN_SET}.prototxt" 
         if [ ${USE_GPU} -ne 0 ]; then
-        	CMD="${CMD} --gpu=${DEV_ID}"
-		fi
-		if [ -f ${MODEL} ]; then
-			CMD="${CMD} --weights=${MODEL}"
-		fi
-#                CMD="${CMD} --snapshot=${EXP}/model/${NET_ID}/${TRAIN_SET}_iter_2026.solverstate"
+            CMD="${CMD} --gpu=${DEV_ID}"
+	fi
+	if [ -f ${MODEL} ]; then
+	    CMD="${CMD} --weights=${MODEL}"
+	fi
 
-		echo Running ${CMD} #&& ${CMD}
+#        CMD="${CMD} --snapshot=${EXP}/model/${NET_ID}/${TRAIN_SET}_iter_2849.solverstate"
+
+        echo Running ${CMD} && ${CMD}
 fi
 
 ## Test #1 specification (on val or test)
@@ -94,30 +94,31 @@ fi
 if [ ${RUN_TEST} -eq 1 ]; then
     #
     for TEST_SET in val; do
-		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
-		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
-		echo TEST ITER = "${TEST_ITER}"
-		MODEL=${EXP}/model/${NET_ID}/test${FOLD_SUFFIX}.caffemodel
-		if [ ! -f ${MODEL} ]; then
-				MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
-		fi
-		#
-		echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
-		FEATURE_DIR=${EXP}/features/${NET_ID}
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
-		sed "$(eval echo $(cat sub.sed))" \
-				${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
-		CMD="${CAFFE_BIN} test \
+        TEST_SET=${TEST_SET}${FOLD_SUFFIX}
+        TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
+        echo TEST ITER = "${TEST_ITER}"
+        MODEL=${EXP}/model/${NET_ID}/test${FOLD_SUFFIX}.caffemodel
+        if [ ! -f ${MODEL} ]; then
+            MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
+        fi
+        #
+        echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
+        FEATURE_DIR=${EXP}/features/${NET_ID}
+        mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc1
+        #mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
+        #mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
+        #mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
+        sed "$(eval echo $(cat sub.sed))" \
+            ${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
+       CMD="${CAFFE_BIN} test \
              --model=${CONFIG_DIR}/test_${TEST_SET}.prototxt \
              --weights=${MODEL} \
              --iterations=${TEST_ITER}"
 #             --gpu=${DEV_ID} \
         if [ ${USE_GPU} -ne 0 ]; then
-        	CMD="${CMD} --gpu=${DEV_ID}"
-		fi
-		echo Running ${CMD} #&& ${CMD}
+           CMD="${CMD} --gpu=${DEV_ID}"
+	fi
+		echo Running ${CMD} && ${CMD}
     done
 fi
 

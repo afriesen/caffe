@@ -21777,31 +21777,6 @@ layer {
   }
 }
 
-#### upsample the feature layers ####
-layer {
-  name: "feat_res05_interp"
-  bottom: "res5c_res05"
-  bottom: "res5c" # upscale to the same dimensions as this input layer
-  top: "feat_res05_interp"
-  type: "Interp"
-  interp_param {
-    pad_beg: 0
-    pad_end: 0
-  }
-}
-
-layer {
-  name: "feat_res075_interp"
-  bottom: "res5c_res075"
-  bottom: "res5c" # upscale to the same dimensions as this input layer
-  top: "feat_res075_interp"
-  type: "Interp"
-    interp_param {
-    pad_beg: 0
-    pad_end: 0
-  }
-}
-
 ############### merging multiscale results #####################
 layer {
   bottom: "fc1_${EXP}"
@@ -21815,37 +21790,17 @@ layer {
   }
 }
 
-layer {
-  bottom: "res5c"
-  bottom: "feat_res075_interp"
-  bottom: "feat_res05_interp"
-  top: "feat_fusion"
-  name: "feat_fusion"
-  type: "Eltwise"
-  eltwise_param {
-    operation: MAX
-  }
-}
-
 
 ##################### original resolution #######################
 layer {
   name: "fc1_interp"
   type: "Interp"
   bottom: "fc_fusion"
-  bottom: "data"  #resize height&width to the same size as the data layer
+  bottom: "data"  #resize to the same size as the data layer
   top: "fc1_interp"
   interp_param {
 #    zoom_factor: 8
   }
-}
-
-layer {
-  name: "feat_interp"
-  type: "Interp"
-  bottom: "feat_fusion"
-  bottom: "data" #resize height&width to the same size as the data layer
-  top: "feat_interp"
 }
 
 # layer {
@@ -21875,51 +21830,44 @@ layer {
 # }
 
 layer {
-  name: "feat_silence"
-  type: "Silence"
-  bottom: "feat_interp"
+  name: "softmax_interp"
+  type: "Softmax"
+  bottom: "fc1_interp"
+  top: "softmax_interp"
 }
-
-#layer {
-#  name: "negfc1_interp"
-#  type: "Scale"
-#  bottom: "fc1_interp"
-#  top: "negfc1_interp"
-#  param { lr_mult: 0 decay_mult: 0 }
-#  scale_param { filler { type: "constant" value: -1 } bias_term: false }
-#}
-
+layer {
+	name: "log_interp"
+	type: "Log"
+	bottom: "softmax_interp"
+	top: "log_interp"
+}
+layer {
+	name: "neglog_interp"
+	type: "Scale"
+	bottom: "log_interp"
+	top: "neglog_interp"
+	param { lr_mult: 0 decay_mult: 0 }
+	scale_param { 
+	  filler { type: "constant" value: -1 }
+	  bias_term: false
+	}
+}
 layer {
   name: "SSPNloss"
   type: "SSPN"
-  bottom: "data" # input image
-  bottom: "fc1_interp" # input symbol costs
-#  bottom: "negfc1_interp" # input negated symbol costs # TODO: REMOVE THIS
-#  bottom: "feat_interp" # input features, if layer_param specifies it
-#  bottom: "label" # input labels
+  bottom: "data"
+  #bottom: "fc1_${EXP}_res05"
+#  bottom: "softmax"
+  bottom: "neglog_interp"
+#  bottom: "label"
   top: "sspn_MAP"
 #  top: "sspn_loss"
+  loss_param { ignore_label: 255 }
+  param { name: "production_costs" lr_mult: 0 }  # production costs -- share params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 0 } # boundary factors for production 0 -- share params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-#    pairwise_features: TextonBoost
-#    pairwise_features: Input
-#    pairwise_factor_multiplier: 4
-#    pairwise_factor_multiplier: 8
-#    pairwise_factor_multiplier: 12
-#    pairwise_factor_multiplier: 16
-#    pairwise_factor_multiplier: 32
-#    pairwise_factor_multiplier: 64 
-#    pairwise_factor_multiplier: 128
-#    pairwise_factor_multiplier: 192 
-#    pairwise_factor_multiplier: 256 
-#    pairwise_factor_multiplier: 320
-#    pairwise_factor_multiplier: 512
-    pairwise_factor_multiplier: 1024
-#    pairwise_factor_multiplier: 1536
-#    pairwise_factor_multiplier: 2048
-#    pairwise_factor_multiplier: 4096
-#    pairwise_factor_multiplier: 0 
-#    pairwise_factor_multiplier: 0.5
+    pairwise_factor_multiplier: 0
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }
@@ -21936,13 +21884,15 @@ layer {
         body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
       }
     }
+    production_weight_filler { type: "constant" value: 0 }
+    boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
   }
 }
 
 layer {
   name: "accuracy"
   type: "SegAccuracy"
-#  bottom: "fc1_interp"
+  #bottom: "fc1_interp"
   bottom: "sspn_MAP"
   bottom: "label"
   top: "fc1_accuracy"

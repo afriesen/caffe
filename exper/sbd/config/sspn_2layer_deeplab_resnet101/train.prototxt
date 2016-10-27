@@ -22021,6 +22021,7 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
+      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
     boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
@@ -22094,6 +22095,7 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
+      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
     boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
@@ -22167,6 +22169,7 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
+      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
     boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }
@@ -22260,6 +22263,7 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
+      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
     boundary_weight_filler { type: "gaussian" mean: -3 std: 0.25 }

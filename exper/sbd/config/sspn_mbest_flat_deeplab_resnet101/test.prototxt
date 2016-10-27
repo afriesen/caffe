@@ -21907,6 +21907,7 @@ layer {
 #    pairwise_factor_multiplier: 8
 #    pairwise_factor_multiplier: 12
 #    pairwise_factor_multiplier: 16
+#    pairwise_factor_multiplier: 24 
 #    pairwise_factor_multiplier: 32
 #    pairwise_factor_multiplier: 64 
 #    pairwise_factor_multiplier: 128
@@ -21914,7 +21915,9 @@ layer {
 #    pairwise_factor_multiplier: 256 
 #    pairwise_factor_multiplier: 320
 #    pairwise_factor_multiplier: 512
-    pairwise_factor_multiplier: 1024
+#    pairwise_factor_multiplier: 768 
+#    pairwise_factor_multiplier: 1024
+    pairwise_factor_multiplier: 1280
 #    pairwise_factor_multiplier: 1536
 #    pairwise_factor_multiplier: 2048
 #    pairwise_factor_multiplier: 4096
