@@ -21895,6 +21895,8 @@ layer {
 #    pairwise_features: Input
 #    pairwise_factor_multiplier: 4
 #    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 10
+    pairwise_factor_multiplier: 10.5
     grammar {
       symbol { id: 0 name: "Scene" type: Nonterminal }
       symbol { id: 1 name: "NT0" type: Nonterminal }
@@ -21923,7 +21925,7 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
-      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
+      production { id: 14 head_id: 0 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
   }
 }
