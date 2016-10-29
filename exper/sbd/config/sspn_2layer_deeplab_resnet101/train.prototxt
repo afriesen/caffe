@@ -21989,11 +21989,11 @@ layer {
   top: "sspn_loss"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0.0 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0.0 } # boundary factors for production 0 -- shared params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
     grammar {
       symbol { id: 0 name: "Scene" type: Nonterminal }
       symbol { id: 1 name: "NT0" type: Nonterminal }
@@ -22022,14 +22022,14 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
-      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
+      production { id: 14 head_id: 0 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
     num_threads: 0
     num_restarts: 10
     use_m_best_diverse_samples: true
-    pct_of_std_to_add_for_diversity: 0.02
+    pct_of_std_to_add_for_diversity: 0.1
   }
 }
 
@@ -22067,11 +22067,11 @@ layer {
   top: "sspn_loss_res1"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0.0 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0.0 } # boundary factors for production 0 -- shared params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
     grammar {
       symbol { id: 0 name: "Scene" type: Nonterminal }
       symbol { id: 1 name: "NT0" type: Nonterminal }
@@ -22100,14 +22100,14 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
-      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
+      production { id: 14 head_id: 0 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
     num_threads: 0
     num_restarts: 10
     use_m_best_diverse_samples: true
-    pct_of_std_to_add_for_diversity: 0.02
+    pct_of_std_to_add_for_diversity: 0.1
   }
 }
 layer {
@@ -22145,11 +22145,11 @@ layer {
   top: "sspn_loss_res075"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- share params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- share params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0.0 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0.0 } # boundary factors for production 0 -- shared params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
     grammar {
       symbol { id: 0 name: "Scene" type: Nonterminal }
       symbol { id: 1 name: "NT0" type: Nonterminal }
@@ -22178,14 +22178,14 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
-      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
+      production { id: 14 head_id: 0 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
     num_threads: 0
     num_restarts: 10
     use_m_best_diverse_samples: true
-    pct_of_std_to_add_for_diversity: 0.02
+    pct_of_std_to_add_for_diversity: 0.1
   }
 }
 layer {
@@ -22243,11 +22243,11 @@ layer {
   top: "sspn_loss_res05"
   include { phase: TRAIN }
   loss_param { ignore_label: 255 }
-  param { name: "production_costs" lr_mult: 1 }  # production costs -- shared params with all other SSPN instances
-  param { name: "boundary_factors_prod0" lr_mult: 10 } # boundary factors for production 0 -- shared params with all other SSPN instances
+  param { name: "production_costs" lr_mult: 10 decay_mult: 0.0 }  # production costs -- shared params with all other SSPN instances
+  param { name: "boundary_factors_prod0" lr_mult: 10 decay_mult: 0.0 } # boundary factors for production 0 -- shared params with all other SSPN instances
   sspn_param {
     pairwise_features: PixelIntensity
-    pairwise_factor_multiplier: 0.5
+#    pairwise_factor_multiplier: 0.5
     grammar {
       symbol { id: 0 name: "Scene" type: Nonterminal }
       symbol { id: 1 name: "NT0" type: Nonterminal }
@@ -22276,14 +22276,14 @@ layer {
       production { id: 11  head_id: 4  body_id: 5  body_id: 6  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 12  head_id: 4  body_id: 5  body_id: 7  body_id: 8  body_id: 9  body_id: 12 }
       production { id: 13  head_id: 4  body_id: 6  body_id: 7  body_id: 11 }
-      production { id: 14 head_id: 2 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
+      production { id: 14 head_id: 0 body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12 }
     }
     production_weight_filler { type: "constant" value: 0 }
-    boundary_weight_filler { type: "gaussian" mean: -0.5 std: 0.25 }
+    boundary_weight_filler { type: "gaussian" mean: 0 std: 0.25 }
     num_threads: 0
     num_restarts: 10
     use_m_best_diverse_samples: true
-    pct_of_std_to_add_for_diversity: 0.02
+    pct_of_std_to_add_for_diversity: 0.1
   }
 }
 layer {
