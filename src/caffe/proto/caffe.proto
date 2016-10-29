@@ -1268,6 +1268,10 @@ message SSPNParameter {
   // true to weight the contribution of each MAP sample by its exp(-energy), normalized by the sum
   // over this value for all samples
   optional bool weight_restarts_by_prob = 12 [default = false];
+
+  // true to scale the pairwise factors by roughly sqrt(npixels) in each image to account for
+  // different image sizes during testing and between training and testing
+  optional bool scale_pairwise_factors_by_image_dims = 13 [default = false];
 }
 
 message TanHParameter {
