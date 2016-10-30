@@ -1272,6 +1272,9 @@ message SSPNParameter {
   // true to scale the pairwise factors by roughly sqrt(npixels) in each image to account for
   // different image sizes during testing and between training and testing
   optional bool scale_pairwise_factors_by_image_dims = 13 [default = false];
+
+  // amount that SSPN should write to cout when running (0 = none, 5 = everything)
+  optional int32 sspn_verbosity = 14 [default = 0];
 }
 
 message TanHParameter {
