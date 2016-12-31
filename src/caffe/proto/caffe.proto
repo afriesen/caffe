@@ -1226,7 +1226,7 @@ message GrammarParameter {
 
 message SSPNParameter {
   // the grammar that defines the structure of this SSPN
-  required GrammarParameter grammar = 1;
+  optional GrammarParameter grammar = 1;
 
   // max number of inference iterations per image
   optional int32 max_iterations = 2 [default = 10];
