@@ -1275,6 +1275,9 @@ message SSPNParameter {
 
   // amount that SSPN should write to cout when running (0 = none, 5 = everything)
   optional int32 sspn_verbosity = 14 [default = 0];
+
+  // file containing the grammar protobuf (this and grammar cannot both be specified)
+  optional string grammar_file = 15; // Proto filename for the grammar.
 }
 
 message TanHParameter {
