@@ -1278,6 +1278,14 @@ message SSPNParameter {
 
   // file containing the grammar protobuf (this and grammar cannot both be specified)
   optional string grammar_file = 15; // Proto filename for the grammar.
+
+  // the number of layers of productions in the grammar to instantiate (productions and symbols in
+  // higher layers are removed and parent-less productions are connected to the start symbol)
+  optional int32 num_grammar_layers_to_use = 16;
+
+  // the number of layers of productions that the grammar was trained with (tells the initializer
+  // what weights to keep around and which to re-init)
+  optional int32 num_trained_grammar_layers = 17;
 }
 
 message TanHParameter {
