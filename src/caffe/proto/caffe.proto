@@ -1286,6 +1286,9 @@ message SSPNParameter {
   // the number of layers of productions that the grammar was trained with (tells the initializer
   // what weights to keep around and which to re-init)
   optional int32 num_trained_grammar_layers = 17;
+
+  // filler for the weights of each symbol in the body of each production
+  optional FillerParameter prod_body_weight_filler = 18;
 }
 
 message TanHParameter {
