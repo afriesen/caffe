@@ -1254,7 +1254,8 @@ message SSPNParameter {
   // the number of threads to use for inference (numthreads <= 0 --> num_threads = min(cv::getNumThreads(), batch_size))
   optional int32 num_threads = 8 [default = 1];
 
-  // the number of times to restart inference during training to more robustly estimate parameters
+  // the number of times to restart inference during training (i.e., the M in M-best diverse modes)
+  // to more robustly estimate parameters (TRAIN only)
   optional int32 num_restarts = 9 [default = 1];
 
   // true to change the symbol costs of restarts to push the next sample's MAP away from all
@@ -1289,6 +1290,14 @@ message SSPNParameter {
 
   // filler for the weights of each symbol in the body of each production
   optional FillerParameter prod_body_weight_filler = 18;
+
+  // whether or not to sum (vs. max) over the productions of the start symbol -- equivalent to
+  // using a sum node instead of a max node in the corresponding SPN (TRAIN only)
+  optional bool sum_over_start_sym_productions = 19 [default = false];
+
+  // whether or not to use the production cost of the top productions when computing the gradient
+  // (only applies when summing over start symbol productions)
+  optional bool use_start_sym_prod_cost = 20 [default = true];
 }
 
 message TanHParameter {
