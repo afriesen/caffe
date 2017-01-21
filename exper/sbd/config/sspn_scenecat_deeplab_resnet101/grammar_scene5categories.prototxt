@@ -1,0 +1,268 @@
+symbol {
+  id: 0
+  name: "S"
+  type: Nonterminal
+}
+symbol {
+  id: 1
+  name: "S1"
+  type: Nonterminal
+}
+symbol {
+  id: 2
+  name: "S2"
+  type: Nonterminal
+}
+symbol {
+  id: 3
+  name: "S3"
+  type: Nonterminal
+}
+symbol {
+  id: 4
+  name: "S4"
+  type: Nonterminal
+}
+
+symbol {
+  id: 5
+  name: "Sky_1"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 6
+  name: "Tree_1"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 7
+  name: "Road_1"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 8
+  name: "Grass_1"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 9
+  name: "Water_1"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 10
+  name: "Building_1"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 11
+  name: "Mountain_1"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 12
+  name: "FG obj_1"
+  type: Terminal
+  label_id: 7
+}
+
+symbol {
+  id: 13
+  name: "Sky_2"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 14
+  name: "Tree_2"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 15
+  name: "Road_2"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 16
+  name: "Grass_2"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 17
+  name: "Water_2"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 18
+  name: "Building_2"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 19
+  name: "Mountain_2"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 20
+  name: "FG obj_2"
+  type: Terminal
+  label_id: 7
+}
+
+symbol {
+  id: 21
+  name: "Sky_3"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 22
+  name: "Tree_3"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 23
+  name: "Road_3"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 24
+  name: "Grass_3"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 25
+  name: "Water_3"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 26
+  name: "Building_3"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 27
+  name: "Mountain_3"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 28
+  name: "FG obj_3"
+  type: Terminal
+  label_id: 7
+}
+
+symbol {
+  id: 29
+  name: "Sky_4"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 30
+  name: "Tree_4"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 31
+  name: "Road_4"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 32
+  name: "Grass_4"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 33
+  name: "Water_4"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 34
+  name: "Building_4"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 35
+  name: "Mountain_4"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 36
+  name: "FG obj_4"
+  type: Terminal
+  label_id: 7
+}
+
+production {
+  id: 0
+  head_id: 0
+  body_id: 1
+  body_id: 1
+}
+production {
+  id: 1
+  head_id: 0
+  body_id: 2
+  body_id: 2
+}
+production {
+  id: 2
+  head_id: 0
+  body_id: 3
+  body_id: 3
+}
+production {
+  id: 3
+  head_id: 0
+  body_id: 4
+  body_id: 4
+}
+
+production {
+  id: 4
+  head_id: 1
+  body_id: 5 body_id: 6 body_id: 7 body_id: 8 body_id: 9 body_id: 10 body_id: 11 body_id: 12
+}
+production {
+  id: 5
+  head_id: 2
+  body_id: 13 body_id: 14 body_id: 15 body_id: 16 body_id: 17 body_id: 18 body_id: 19 body_id: 20
+}
+production {
+  id: 6
+  head_id: 3
+  body_id: 21 body_id: 22 body_id: 23 body_id: 24 body_id: 25 body_id: 26 body_id: 27 body_id: 28
+}
+production {
+  id: 7
+  head_id: 4
+  body_id: 29 body_id: 30 body_id: 31 body_id: 32 body_id: 33 body_id: 34 body_id: 35 body_id: 363
+}
+

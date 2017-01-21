@@ -1,0 +1,341 @@
+symbol {
+  id: 0
+  name: "S"
+  type: Nonterminal
+}
+symbol {
+  id: 1
+  name: "N1"
+  type: Nonterminal
+}
+symbol {
+  id: 2
+  name: "N2"
+  type: Nonterminal
+}
+symbol {
+  id: 3
+  name: "N3"
+  type: Nonterminal
+}
+symbol {
+  id: 4
+  name: "N4"
+  type: Nonterminal
+}
+symbol {
+  id: 5
+  name: "N5"
+  type: Nonterminal
+}
+symbol {
+  id: 6
+  name: "N6"
+  type: Nonterminal
+}
+symbol {
+  id: 7
+  name: "Sky"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 8
+  name: "Tree"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 9
+  name: "Road"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 10
+  name: "Grass"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 11
+  name: "Water"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 12
+  name: "Building"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 13
+  name: "Mountain"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 14
+  name: "FG obj"
+  type: Terminal
+  label_id: 7
+}
+production {
+  id: 0
+  head_id: 0
+  body_id: 1
+  body_id: 2
+}
+production {
+  id: 1
+  head_id: 0
+  body_id: 1
+  body_id: 3
+}
+production {
+  id: 2
+  head_id: 0
+  body_id: 2
+  body_id: 3
+}
+production {
+  id: 3
+  head_id: 1
+  body_id: 6
+  body_id: 5
+}
+production {
+  id: 4
+  head_id: 1
+  body_id: 6
+  body_id: 4
+}
+production {
+  id: 5
+  head_id: 1
+  body_id: 4
+  body_id: 5
+}
+production {
+  id: 6
+  head_id: 1
+  body_id: 4
+  body_id: 5
+}
+production {
+  id: 7
+  head_id: 2
+  body_id: 4
+  body_id: 6
+}
+production {
+  id: 8
+  head_id: 2
+  body_id: 6
+  body_id: 5
+}
+production {
+  id: 9
+  head_id: 2
+  body_id: 5
+  body_id: 4
+}
+production {
+  id: 10
+  head_id: 2
+  body_id: 4
+  body_id: 4
+}
+production {
+  id: 11
+  head_id: 3
+  body_id: 5
+  body_id: 6
+}
+production {
+  id: 12
+  head_id: 3
+  body_id: 6
+  body_id: 4
+}
+production {
+  id: 13
+  head_id: 3
+  body_id: 4
+  body_id: 5
+}
+production {
+  id: 14
+  head_id: 3
+  body_id: 6
+  body_id: 6
+}
+production {
+  id: 15
+  head_id: 4
+  body_id: 13
+  body_id: 8
+}
+production {
+  id: 16
+  head_id: 5
+  body_id: 13
+  body_id: 7
+}
+production {
+  id: 17
+  head_id: 6
+  body_id: 13
+  body_id: 12
+}
+production {
+  id: 18
+  head_id: 4
+  body_id: 13
+  body_id: 10
+}
+production {
+  id: 19
+  head_id: 5
+  body_id: 13
+  body_id: 14
+}
+production {
+  id: 20
+  head_id: 6
+  body_id: 13
+  body_id: 9
+}
+production {
+  id: 21
+  head_id: 4
+  body_id: 13
+  body_id: 11
+}
+production {
+  id: 22
+  head_id: 5
+  body_id: 8
+  body_id: 7
+}
+production {
+  id: 23
+  head_id: 6
+  body_id: 8
+  body_id: 12
+}
+production {
+  id: 24
+  head_id: 4
+  body_id: 8
+  body_id: 10
+}
+production {
+  id: 25
+  head_id: 5
+  body_id: 8
+  body_id: 14
+}
+production {
+  id: 26
+  head_id: 6
+  body_id: 8
+  body_id: 9
+}
+production {
+  id: 27
+  head_id: 4
+  body_id: 8
+  body_id: 11
+}
+production {
+  id: 28
+  head_id: 5
+  body_id: 7
+  body_id: 12
+}
+production {
+  id: 29
+  head_id: 6
+  body_id: 7
+  body_id: 10
+}
+production {
+  id: 30
+  head_id: 4
+  body_id: 7
+  body_id: 14
+}
+production {
+  id: 31
+  head_id: 5
+  body_id: 7
+  body_id: 9
+}
+production {
+  id: 32
+  head_id: 6
+  body_id: 7
+  body_id: 11
+}
+production {
+  id: 33
+  head_id: 4
+  body_id: 12
+  body_id: 10
+}
+production {
+  id: 34
+  head_id: 5
+  body_id: 12
+  body_id: 14
+}
+production {
+  id: 35
+  head_id: 6
+  body_id: 12
+  body_id: 9
+}
+production {
+  id: 36
+  head_id: 4
+  body_id: 12
+  body_id: 11
+}
+production {
+  id: 37
+  head_id: 5
+  body_id: 10
+  body_id: 14
+}
+production {
+  id: 38
+  head_id: 6
+  body_id: 10
+  body_id: 9
+}
+production {
+  id: 39
+  head_id: 4
+  body_id: 10
+  body_id: 11
+}
+production {
+  id: 40
+  head_id: 5
+  body_id: 14
+  body_id: 9
+}
+production {
+  id: 41
+  head_id: 6
+  body_id: 14
+  body_id: 11
+}
+production {
+  id: 42
+  head_id: 4
+  body_id: 9
+  body_id: 11
+}

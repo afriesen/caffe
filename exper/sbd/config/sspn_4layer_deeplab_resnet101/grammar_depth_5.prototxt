@@ -1,0 +1,727 @@
+symbol {
+  id: 0
+  name: "S"
+  type: Nonterminal
+}
+symbol {
+  id: 1
+  name: "N1"
+  type: Nonterminal
+}
+symbol {
+  id: 2
+  name: "N2"
+  type: Nonterminal
+}
+symbol {
+  id: 3
+  name: "N3"
+  type: Nonterminal
+}
+symbol {
+  id: 4
+  name: "N4"
+  type: Nonterminal
+}
+symbol {
+  id: 5
+  name: "N5"
+  type: Nonterminal
+}
+symbol {
+  id: 6
+  name: "N6"
+  type: Nonterminal
+}
+symbol {
+  id: 7
+  name: "N7"
+  type: Nonterminal
+}
+symbol {
+  id: 8
+  name: "N8"
+  type: Nonterminal
+}
+symbol {
+  id: 9
+  name: "N9"
+  type: Nonterminal
+}
+symbol {
+  id: 10
+  name: "N10"
+  type: Nonterminal
+}
+symbol {
+  id: 11
+  name: "N11"
+  type: Nonterminal
+}
+symbol {
+  id: 12
+  name: "N12"
+  type: Nonterminal
+}
+symbol {
+  id: 13
+  name: "N13"
+  type: Nonterminal
+}
+symbol {
+  id: 14
+  name: "N14"
+  type: Nonterminal
+}
+symbol {
+  id: 15
+  name: "N15"
+  type: Nonterminal
+}
+symbol {
+  id: 16
+  name: "N16"
+  type: Nonterminal
+}
+symbol {
+  id: 17
+  name: "N17"
+  type: Nonterminal
+}
+symbol {
+  id: 18
+  name: "N18"
+  type: Nonterminal
+}
+symbol {
+  id: 19
+  name: "N19"
+  type: Nonterminal
+}
+symbol {
+  id: 20
+  name: "N20"
+  type: Nonterminal
+}
+symbol {
+  id: 21
+  name: "t21.0"
+  type: Terminal
+  label_id: 0
+}
+symbol {
+  id: 22
+  name: "t22.1"
+  type: Terminal
+  label_id: 1
+}
+symbol {
+  id: 23
+  name: "t23.2"
+  type: Terminal
+  label_id: 2
+}
+symbol {
+  id: 24
+  name: "t24.3"
+  type: Terminal
+  label_id: 3
+}
+symbol {
+  id: 25
+  name: "t25.4"
+  type: Terminal
+  label_id: 4
+}
+symbol {
+  id: 26
+  name: "t26.5"
+  type: Terminal
+  label_id: 5
+}
+symbol {
+  id: 27
+  name: "t27.6"
+  type: Terminal
+  label_id: 6
+}
+symbol {
+  id: 28
+  name: "t28.7"
+  type: Terminal
+  label_id: 7
+}
+production {
+  id: 0
+  head_id: 0
+  body_id: 1
+  body_id: 2
+}
+production {
+  id: 1
+  head_id: 0
+  body_id: 1
+  body_id: 3
+}
+production {
+  id: 2
+  head_id: 0
+  body_id: 1
+  body_id: 4
+}
+production {
+  id: 3
+  head_id: 0
+  body_id: 2
+  body_id: 3
+}
+production {
+  id: 4
+  head_id: 0
+  body_id: 2
+  body_id: 4
+}
+production {
+  id: 5
+  head_id: 0
+  body_id: 3
+  body_id: 4
+}
+production {
+  id: 6
+  head_id: 1
+  body_id: 5
+  body_id: 6
+}
+production {
+  id: 7
+  head_id: 1
+  body_id: 6
+  body_id: 7
+}
+production {
+  id: 8
+  head_id: 1
+  body_id: 5
+  body_id: 8
+}
+production {
+  id: 9
+  head_id: 2
+  body_id: 6
+  body_id: 8
+}
+production {
+  id: 10
+  head_id: 2
+  body_id: 5
+  body_id: 6
+}
+production {
+  id: 11
+  head_id: 2
+  body_id: 7
+  body_id: 8
+}
+production {
+  id: 12
+  head_id: 3
+  body_id: 5
+  body_id: 6
+}
+production {
+  id: 13
+  head_id: 3
+  body_id: 5
+  body_id: 7
+}
+production {
+  id: 14
+  head_id: 3
+  body_id: 7
+  body_id: 8
+}
+production {
+  id: 15
+  head_id: 4
+  body_id: 6
+  body_id: 8
+}
+production {
+  id: 16
+  head_id: 4
+  body_id: 8
+  body_id: 5
+}
+production {
+  id: 17
+  head_id: 4
+  body_id: 6
+  body_id: 5
+}
+production {
+  id: 18
+  head_id: 5
+  body_id: 9
+  body_id: 12
+}
+production {
+  id: 19
+  head_id: 5
+  body_id: 11
+  body_id: 10
+}
+production {
+  id: 20
+  head_id: 5
+  body_id: 12
+  body_id: 11
+}
+production {
+  id: 21
+  head_id: 6
+  body_id: 11
+  body_id: 12
+}
+production {
+  id: 22
+  head_id: 6
+  body_id: 9
+  body_id: 11
+}
+production {
+  id: 23
+  head_id: 6
+  body_id: 10
+  body_id: 11
+}
+production {
+  id: 24
+  head_id: 7
+  body_id: 10
+  body_id: 12
+}
+production {
+  id: 25
+  head_id: 7
+  body_id: 12
+  body_id: 9
+}
+production {
+  id: 26
+  head_id: 7
+  body_id: 11
+  body_id: 9
+}
+production {
+  id: 27
+  head_id: 8
+  body_id: 12
+  body_id: 10
+}
+production {
+  id: 28
+  head_id: 8
+  body_id: 9
+  body_id: 12
+}
+production {
+  id: 29
+  head_id: 8
+  body_id: 11
+  body_id: 12
+}
+production {
+  id: 30
+  head_id: 9
+  body_id: 15
+  body_id: 14
+}
+production {
+  id: 31
+  head_id: 9
+  body_id: 16
+  body_id: 13
+}
+production {
+  id: 32
+  head_id: 9
+  body_id: 13
+  body_id: 14
+}
+production {
+  id: 33
+  head_id: 10
+  body_id: 13
+  body_id: 14
+}
+production {
+  id: 34
+  head_id: 10
+  body_id: 13
+  body_id: 16
+}
+production {
+  id: 35
+  head_id: 10
+  body_id: 15
+  body_id: 13
+}
+production {
+  id: 36
+  head_id: 11
+  body_id: 13
+  body_id: 16
+}
+production {
+  id: 37
+  head_id: 11
+  body_id: 16
+  body_id: 15
+}
+production {
+  id: 38
+  head_id: 11
+  body_id: 14
+  body_id: 15
+}
+production {
+  id: 39
+  head_id: 12
+  body_id: 16
+  body_id: 13
+}
+production {
+  id: 40
+  head_id: 12
+  body_id: 14
+  body_id: 15
+}
+production {
+  id: 41
+  head_id: 12
+  body_id: 13
+  body_id: 14
+}
+production {
+  id: 42
+  head_id: 13
+  body_id: 19
+  body_id: 18
+}
+production {
+  id: 43
+  head_id: 13
+  body_id: 19
+  body_id: 17
+}
+production {
+  id: 44
+  head_id: 13
+  body_id: 19
+  body_id: 20
+}
+production {
+  id: 45
+  head_id: 14
+  body_id: 20
+  body_id: 17
+}
+production {
+  id: 46
+  head_id: 14
+  body_id: 17
+  body_id: 18
+}
+production {
+  id: 47
+  head_id: 14
+  body_id: 20
+  body_id: 18
+}
+production {
+  id: 48
+  head_id: 15
+  body_id: 20
+  body_id: 17
+}
+production {
+  id: 49
+  head_id: 15
+  body_id: 20
+  body_id: 18
+}
+production {
+  id: 50
+  head_id: 15
+  body_id: 19
+  body_id: 18
+}
+production {
+  id: 51
+  head_id: 16
+  body_id: 18
+  body_id: 19
+}
+production {
+  id: 52
+  head_id: 16
+  body_id: 17
+  body_id: 20
+}
+production {
+  id: 53
+  head_id: 16
+  body_id: 18
+  body_id: 17
+}
+production {
+  id: 54
+  head_id: 17
+  body_id: 27
+  body_id: 22
+}
+production {
+  id: 55
+  head_id: 18
+  body_id: 27
+  body_id: 21
+}
+production {
+  id: 56
+  head_id: 19
+  body_id: 27
+  body_id: 26
+}
+production {
+  id: 57
+  head_id: 20
+  body_id: 27
+  body_id: 24
+}
+production {
+  id: 58
+  head_id: 17
+  body_id: 27
+  body_id: 28
+}
+production {
+  id: 59
+  head_id: 18
+  body_id: 27
+  body_id: 23
+}
+production {
+  id: 60
+  head_id: 19
+  body_id: 27
+  body_id: 25
+}
+production {
+  id: 61
+  head_id: 20
+  body_id: 22
+  body_id: 21
+}
+production {
+  id: 62
+  head_id: 17
+  body_id: 22
+  body_id: 26
+}
+production {
+  id: 63
+  head_id: 18
+  body_id: 22
+  body_id: 24
+}
+production {
+  id: 64
+  head_id: 19
+  body_id: 22
+  body_id: 28
+}
+production {
+  id: 65
+  head_id: 20
+  body_id: 22
+  body_id: 23
+}
+production {
+  id: 66
+  head_id: 17
+  body_id: 22
+  body_id: 25
+}
+production {
+  id: 67
+  head_id: 18
+  body_id: 21
+  body_id: 26
+}
+production {
+  id: 68
+  head_id: 19
+  body_id: 21
+  body_id: 24
+}
+production {
+  id: 69
+  head_id: 20
+  body_id: 21
+  body_id: 28
+}
+production {
+  id: 70
+  head_id: 17
+  body_id: 21
+  body_id: 23
+}
+production {
+  id: 71
+  head_id: 18
+  body_id: 21
+  body_id: 25
+}
+production {
+  id: 72
+  head_id: 19
+  body_id: 26
+  body_id: 24
+}
+production {
+  id: 73
+  head_id: 20
+  body_id: 26
+  body_id: 28
+}
+production {
+  id: 74
+  head_id: 17
+  body_id: 26
+  body_id: 23
+}
+production {
+  id: 75
+  head_id: 18
+  body_id: 26
+  body_id: 25
+}
+production {
+  id: 76
+  head_id: 19
+  body_id: 24
+  body_id: 28
+}
+production {
+  id: 77
+  head_id: 20
+  body_id: 24
+  body_id: 23
+}
+production {
+  id: 78
+  head_id: 17
+  body_id: 24
+  body_id: 25
+}
+production {
+  id: 79
+  head_id: 18
+  body_id: 28
+  body_id: 23
+}
+production {
+  id: 80
+  head_id: 19
+  body_id: 28
+  body_id: 25
+}
+production {
+  id: 81
+  head_id: 20
+  body_id: 23
+  body_id: 25
+}
+production_cost: 0.082496695
+production_cost: 4.1453996
+production_cost: 4.1453996
+production_cost: 4.1453996
+production_cost: 4.1453996
+production_cost: 4.1453996
+production_cost: 0.033819649
+production_cost: 4.0967226
+production_cost: 4.0967226
+production_cost: 0.033819649
+production_cost: 4.0967226
+production_cost: 4.0967226
+production_cost: 0.033819649
+production_cost: 4.0967226
+production_cost: 4.0967226
+production_cost: 0.033819649
+production_cost: 4.0967226
+production_cost: 4.0967226
+production_cost: 0.033225648
+production_cost: 4.1324964
+production_cost: 4.0961285
+production_cost: 0.033225648
+production_cost: 4.0961285
+production_cost: 4.1324964
+production_cost: 0.16500358
+production_cost: 1.9989876
+production_cost: 4.0961285
+production_cost: 0.16500358
+production_cost: 1.9989876
+production_cost: 4.0961285
+production_cost: 0.032631293
+production_cost: 4.1319017
+production_cost: 4.1319017
+production_cost: 0.037143197
+production_cost: 4.0046358
+production_cost: 4.0046358
+production_cost: 0.16500358
+production_cost: 1.9989876
+production_cost: 4.0961285
+production_cost: 0.16440922
+production_cost: 1.9983932
+production_cost: 4.1319017
+production_cost: 0.89794159
+production_cost: 1.0986123
+production_cost: 1.3499267
+production_cost: 0.82066047
+production_cost: 1.8367716
+production_cost: 0.91497117
+production_cost: 0.84156716
+production_cost: 0.83359903
+production_cost: 2.0063193
+production_cost: 0.92162406
+production_cost: 0.76594669
+production_cost: 1.9860674
+production_cost: 2.2460148
+production_cost: 2.2246234
+production_cost: 2.2772672
+production_cost: 2.4765384
+production_cost: 2.2460148
+production_cost: 2.2246234
+production_cost: 2.2772672
+production_cost: 1.9169226
+production_cost: 1.4575574
+production_cost: 2.0423019
+production_cost: 1.0986123
+production_cost: 1.8613528
+production_cost: 2.2460148
+production_cost: 1.7238482
+production_cost: 2.181957
+production_cost: 1.5602477
+production_cost: 1.8077598
+production_cost: 2.2246234
+production_cost: 2.0149031
+production_cost: 1.4832866
+production_cost: 1.7153865
+production_cost: 2.2246234
+production_cost: 2.181957
+production_cost: 2.3812282
+production_cost: 2.2460148
+production_cost: 1.3491548
+production_cost: 2.2772672
+production_cost: 2.4765384

@@ -12,8 +12,12 @@ label_dir = '/home/afriesen/proj/sspn/data/iccv09Data/labels';
 
 display_labels = false;
 
+numtermlabels = 8;
+
 best_acc = 0;
 best_acc_dir = '';
+best_jacc = 0;
+best_jacc_dir = '';
 
 for jj = 1:numel(map_dir_dir)
     y_true = [];
@@ -46,12 +50,29 @@ for jj = 1:numel(map_dir_dir)
 
     % construct the confusion matrix
     confmat = confusionmat(y_true, y_dcrf);
-    avg_acc = sum(diag(confmat)) / sum(sum(confmat));
-    fprintf('average accuracy = %g\n', avg_acc);
-    if avg_acc > best_acc
-        best_acc = avg_acc;
+    pix_acc = sum(diag(confmat)) / sum(sum(confmat));
+
+    avg_acc = diag(confmat) ./ sum(confmat, 2);
+    avg_acc(isinf(avg_acc) | isnan(avg_acc)) = 0.0;
+    avg_acc = sum(avg_acc) / nnz(avg_acc);
+    
+    jacc = diag(confmat) ./ (sum(confmat, 1)' + sum(confmat, 2) - diag(confmat));
+    jacc(isinf(jacc) | isnan(jacc)) = 1.0;
+    avg_jacc = mean(jacc);
+    
+    avg_jacc_all = (sum(jacc) + 1.0*numtermlabels - numel(jacc)) / numtermlabels;
+    
+    fprintf('pix acc = %g, avg pix acc = %g, avg jacc = %g; [avg jacc (fewer) = %g]\n', ...
+        pix_acc, avg_acc, avg_jacc_all, avg_jacc);
+    if pix_acc > best_acc
+        best_acc = pix_acc;
         best_acc_dir = map_dir_dir(jj).name;
+    end
+    if avg_jacc > best_jacc,
+        best_jacc = avg_jacc;
+        best_jacc_dir = map_dir_dir(jj).name;
     end
 end
 
 fprintf('best acc was %g from folder %s\n', best_acc, best_acc_dir);
+fprintf('best jacc was %g from folder %s\n', best_jacc, best_jacc_dir);

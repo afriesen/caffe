@@ -34,7 +34,7 @@ FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
 
 USE_GPU=1
-DEV_ID=1
+DEV_ID=0
 
 #####
 
@@ -51,8 +51,8 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=0
-RUN_TEST=1
+RUN_TRAIN=1
+RUN_TEST=0
 RUN_TRAIN2=0
 RUN_TEST2=0
 

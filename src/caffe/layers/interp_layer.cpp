@@ -32,9 +32,9 @@ void InterpLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
     if ( interp_param.has_shrink_factor() || interp_param.has_zoom_factor()
         || interp_param.has_height() || interp_param.has_width() ) {
       LOG(FATAL) << "Interp layer cannot have a second bottom layer if any of its shrink, "
-          "zoom, height, or width parameters are specified (ambiguous)";
+          "zoom, height, or width parameters are specified because it is ambiguous";
     }
-    CHECK_LE(num_, 1) << "only a batch size of 1 is currently supported with bottom-specified resizing";
+//    CHECK_LE(num_, 1) << "only a batch size of 1 is currently supported with bottom-specified resizing";
     CHECK_EQ(bottom[1]->num(), num_);
 //    CHECK_EQ(bottom[1]->channels(), channels_);
     CHECK_GT(bottom[1]->height(), 0); 

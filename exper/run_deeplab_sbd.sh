@@ -30,7 +30,7 @@ fi
 #NET_ID=deelab_largeFOV
 NET_ID=deeplab_resnet101
 
-FOLD_SUFFIX=".3"
+FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
 
 ## Variables used for weakly or semi-supervisedly training
@@ -46,7 +46,7 @@ FOLD_SUFFIX=".3"
 #TRAIN_SET_WEAK_LEN=5000
 
 USE_GPU=1
-DEV_ID=1
+DEV_ID=0
 
 #####
 
@@ -54,7 +54,7 @@ DEV_ID=1
 
 CONFIG_DIR=${EXP}/config/${NET_ID}
 MODEL_DIR=${EXP}/model/${NET_ID}
-#MODEL_DIR=${EXP}/model/${NET_ID}/fold1/sqr_lr1e-4
+MODEL_DIR=${EXP}/model/${NET_ID}/fold1/sqr_lr1e-4
 #MODEL_DIR=${EXP}/model/${NET_ID}/fold2/squareimgs161_lr1e-4
 #MODEL_DIR=${EXP}/model/${NET_ID}/fold1/rect_imgs
 mkdir -p ${MODEL_DIR}
@@ -64,10 +64,10 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=1
+RUN_TRAIN=0
 RUN_TEST=1
-RUN_TRAIN2=1
-RUN_TEST2=1
+RUN_TRAIN2=0
+RUN_TEST2=0
 
 ## Training #1 (on train_aug)
 
@@ -104,11 +104,14 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 fi
 
 ## Test #1 specification (on val or test)
+CORRUPTED_IMAGES_USED=0
 
 if [ ${RUN_TEST} -eq 1 ]; then
     #
-    for TEST_SET in val; do
+#    for TEST_SET in val; do
+    for TEST_SET in corrupted_val; do CORRUPTED_IMAGES_USED=1
 #    for TEST_SET in test; do
+#    for TEST_SET in train; do
 		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
 		echo TEST ITER = "${TEST_ITER}"
@@ -134,6 +137,10 @@ if [ ${RUN_TEST} -eq 1 ]; then
         	CMD="${CMD} --gpu=${DEV_ID}"
 	fi
 	echo Running ${CMD} && ${CMD}
+
+        if [ ${CORRUPTED_IMAGES_USED} -eq 1 ]; then
+            echo TEST WAS RUN WITH CORRUPTED IMAGES
+        fi 
     done
 fi
 
