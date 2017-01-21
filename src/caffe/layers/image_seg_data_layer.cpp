@@ -105,35 +105,35 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
   if (crop_width > 0 && crop_height > 0) {
     top[0]->Reshape(batch_size, channels, crop_height, crop_width);
     this->transformed_data_.Reshape(batch_size, channels, crop_height, crop_width);
-    for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
-      this->prefetch_[i].data_.Reshape(batch_size, channels, crop_height, crop_width);
+    for (int i = 0; i < this->prefetch_.size(); ++i) {
+      this->prefetch_[i]->data_.Reshape(batch_size, channels, crop_height, crop_width);
     }
 
     //label
     top[1]->Reshape(batch_size, 1, crop_height, crop_width);
     this->transformed_label_.Reshape(batch_size, 1, crop_height, crop_width);
-    for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
-      this->prefetch_[i].label_.Reshape(batch_size, 1, crop_height, crop_width);
+    for (int i = 0; i < this->prefetch_.size(); ++i) {
+      this->prefetch_[i]->label_.Reshape(batch_size, 1, crop_height, crop_width);
     }
   } else {
     top[0]->Reshape(batch_size, channels, height, width);
     this->transformed_data_.Reshape(batch_size, channels, height, width);
-    for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
-      this->prefetch_[i].data_.Reshape(batch_size, channels, height, width);
+    for (int i = 0; i < this->prefetch_.size(); ++i) {
+      this->prefetch_[i]->data_.Reshape(batch_size, channels, height, width);
     }
 
     //label
     top[1]->Reshape(batch_size, 1, height, width);
     this->transformed_label_.Reshape(batch_size, 1, height, width);
-    for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
-      this->prefetch_[i].label_.Reshape(batch_size, 1, height, width);
+    for (int i = 0; i < this->prefetch_.size(); ++i) {
+      this->prefetch_[i]->label_.Reshape(batch_size, 1, height, width);
     }
   }
 
   // image dimensions, for each image, stores (img_height, img_width)
   top[2]->Reshape(batch_size, 1, 1, 2);
-  for (int i = 0; i < this->PREFETCH_COUNT; ++i) {
-    this->prefetch_[i].dim_.Reshape(batch_size, 1, 1, 2);
+  for (int i = 0; i < this->prefetch_.size(); ++i) {
+    this->prefetch_[i]->dim_.Reshape(batch_size, 1, 1, 2);
   }
 
   LOG(INFO) << "output data size: " << top[0]->num() << ","
