@@ -4,9 +4,11 @@
 ROOT_DIR=
 
 CAFFE_DIR=..
+SSPN_DIR=../../../sspn
 #CAFFE_DIR=../code
 #CAFFE_BIN=${CAFFE_DIR}/.build_release/tools/caffe.bin
-CAFFE_BIN=${CAFFE_DIR}/build/tools/caffe
+#CAFFE_BIN=${CAFFE_DIR}/build/tools/caffe
+CAFFE_BIN=${SSPN_DIR}/build/caffe_sspn
 
 EXP=sbd
 
@@ -14,7 +16,8 @@ if [ "${EXP}" = "sbd" ]; then
     NUM_LABELS=8
 #    DATA_ROOT=${ROOT_DIR}/rmt/data/pascal/VOCdevkit/VOC2012
 #    DATA_ROOT="/home/afriesen/proj/data/VOCdevkit/VOC2012"
-    DATA_ROOT="/Users/afriesen/proj/sspn/data/iccv09Data/"
+#    DATA_ROOT="/Users/afriesen/proj/sspn/data/iccv09Data/"
+    DATA_ROOT="/raid/afriesen/proj/sspn/data/iccv09Data/"
 else
     NUM_LABELS=0
     echo "Wrong exp name"
@@ -24,8 +27,8 @@ fi
 ## Specify which model to train
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
-NET_ID=deeplab_resnet101
-#NET_ID=deeplab_vgg
+#NET_ID=deeplab_resnet101
+NET_ID=deeplab_vgg
 
 FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
@@ -58,7 +61,7 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=1
+RUN_TRAIN=0
 RUN_TEST=1
 RUN_TRAIN2=0
 RUN_TEST2=0
@@ -77,7 +80,8 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 #				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
 #    fi
     #
-    MODEL=${EXP}/model/${NET_ID}/init.caffemodel
+#    MODEL=${EXP}/model/${NET_ID}/init.caffemodel
+    MODEL=${EXP}/model/vgg16/init.caffemodel
     #
     echo Training net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} using weights from ${MODEL}
     for pname in train solver; do

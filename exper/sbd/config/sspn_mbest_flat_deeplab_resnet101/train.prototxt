@@ -30,7 +30,8 @@ layer {
 #    source: "${DATA_ROOT}/folds/${TRAIN_SET}.txt"
 #    batch_size: 2
 #    batch_size: 3
-    batch_size: 5
+#    batch_size: 5
+    batch_size: 10 
     shuffle: true
     label_type: PIXEL
   }
