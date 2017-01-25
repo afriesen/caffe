@@ -52,10 +52,12 @@ void set_mode_cpu() { Caffe::set_mode(Caffe::CPU); }
 void set_mode_gpu() { Caffe::set_mode(Caffe::GPU); }
 
 void InitLog(int level) {
-  FLAGS_logtostderr = 1;
+  FLAGS_alsologtostderr = 1;
   FLAGS_minloglevel = level;
-  ::google::InitGoogleLogging("");
+  ::google::InitGoogleLogging("pycaffe");
   ::google::InstallFailureSignalHandler();
+  std::cout << "INIT LOG WITH LEVEL " << level << ", INFO = " << google::INFO << std::endl;
+  std::cout << "LOG DIR: " << FLAGS_log_dir << std::endl;
 }
 void InitLogInfo() {
   InitLog(google::INFO);
