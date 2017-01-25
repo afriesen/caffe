@@ -56,8 +56,6 @@ void InitLog(int level) {
   FLAGS_minloglevel = level;
   ::google::InitGoogleLogging("pycaffe");
   ::google::InstallFailureSignalHandler();
-  std::cout << "INIT LOG WITH LEVEL " << level << ", INFO = " << google::INFO << std::endl;
-  std::cout << "LOG DIR: " << FLAGS_log_dir << std::endl;
 }
 void InitLogInfo() {
   InitLog(google::INFO);
