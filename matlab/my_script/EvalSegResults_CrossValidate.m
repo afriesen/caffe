@@ -37,6 +37,10 @@ else
    error('Wrong down_sample_method\n');
 end
 
+%range_W=(0.01 0.1 1 4 7 10)
+%range_XY_STD=(0.1 1 10 40 51 100)
+%range_RGB_STD=(0.01 0.1 0.5 1 2 5 10 50)
+
 for w = range_bi_w       %0.5:0.5:6 %[1 5 10 15 20]
   bi_w = w;
   for x_std = range_bi_x_std   %1:12 %[10 20 30 40 50]

@@ -53,7 +53,7 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=1
+RUN_TRAIN=0
 RUN_TEST=1
 RUN_TRAIN2=0
 RUN_TEST2=0
@@ -89,10 +89,12 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 fi
 
 ## Test #1 specification (on val or test)
+CORRUPTED_IMAGES_USED=0
 
 if [ ${RUN_TEST} -eq 1 ]; then
     #
     for TEST_SET in val; do
+#    for TEST_SET in corrupted_val; do CORRUPTED_IMAGES_USED=1
 #    for TEST_SET in test; do
 		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
@@ -123,6 +125,10 @@ if [ ${RUN_TEST} -eq 1 ]; then
             echo Running ${CMD}
         else
             echo Running ${CMD} && ${CMD}
+        fi
+
+        if [ ${CORRUPTED_IMAGES_USED} -eq 1 ]; then
+            echo TEST WAS RUN WITH CORRUPTED IMAGES
         fi
     done
 fi

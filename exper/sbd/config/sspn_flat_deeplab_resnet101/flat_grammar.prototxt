@@ -1,0 +1,16 @@
+    grammar {
+      symbol { id: 0 name: "Scene"       type: Nonterminal }
+      symbol { id: 1 name: "Sky"         type: Terminal label_id: 0 }
+      symbol { id: 2 name: "Tree"        type: Terminal label_id: 1 }
+      symbol { id: 3 name: "Road"        type: Terminal label_id: 2 }
+      symbol { id: 4 name: "Grass"       type: Terminal label_id: 3 }
+      symbol { id: 5 name: "Water"       type: Terminal label_id: 4 }
+      symbol { id: 6 name: "Building"    type: Terminal label_id: 5 }
+      symbol { id: 7 name: "Mountain"    type: Terminal label_id: 6 }
+      symbol { id: 8 name: "Foreground"  type: Terminal label_id: 7 }
+      production {
+        id: 0
+        head_id: 0
+        body_id: 1 body_id: 2 body_id: 3 body_id: 4 body_id: 5 body_id: 6 body_id: 7 body_id: 8
+      }
+    }

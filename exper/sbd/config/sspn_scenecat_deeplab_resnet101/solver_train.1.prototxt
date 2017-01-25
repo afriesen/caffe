@@ -1,0 +1,24 @@
+train_net: "sbd/config/sspn_scenecat_deeplab_resnet101/train_train.1.prototxt"
+
+#iter_size: 10
+#iter_size: 5
+iter_size: 2
+lr_policy: "poly"
+power: 0.9
+#base_lr: 2.5e-4
+base_lr: 1.0e-4
+#base_lr: 1.0e-5
+#base_lr: 1.0e-6
+
+average_loss: 20
+display: 20
+max_iter: 20000
+momentum: 0.9
+##momentum: 0.0
+weight_decay: 0.0005
+rms_decay: 0.0
+
+#snapshot: 10000
+snapshot: 2000
+snapshot_prefix: "sbd/model/sspn_scenecat_deeplab_resnet101/train.1"
+solver_mode: GPU

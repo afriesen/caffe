@@ -32,13 +32,16 @@ range_POS_W=(3)
 range_POS_XY_STD=(3)
 
 # SPECIFY the GRID SEARCH RANGE
-range_W=(4)
-#range_W=(0.1 1 4 7 10)
+#range_W=(4)
+#range_W=(0.01 0.1 1 4 7 10)
+range_W=(2 3 4 5 6)
 #range_XY_STD=(51)
 #range_XY_STD=(45 48 51 54) # best W=4, XY_STD=45, RGB_STD=2
-range_XY_STD=(1 10 20 30 40 51)
+#range_XY_STD=(0.1 1 10 40 51 100) # best W=4, XY_STD=10, RGB_STD=5
+range_XY_STD=(6 8 10 12 14)
 #range_RGB_STD=(5)
-range_RGB_STD=(0.1 0.5 1 2)
+#range_RGB_STD=(0.01 0.1 0.5 1 2 5 10 50)
+range_RGB_STD=(3 4 5 6 7)
 
 TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 

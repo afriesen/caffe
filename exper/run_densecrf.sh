@@ -11,21 +11,26 @@ LOAD_MAT_FILE=1
 #MODEL_NAME=deelab_largeFOV
 MODEL_NAME=deeplab_resnet101
 
+CORRUPTED=1
+
 FOLD_SUFFIX=".1"
 TEST_SET=val          #val, test
-
 
 # the features  folder save the features computed via the model trained with the train set
 # the features2 folder save the features computed via the model trained with the trainval set
 FEATURE_NAME=features #features, features2
 FEATURE_TYPE=fc1
 
+## 1/19/2017 cross val results
+##best acc was 0.901228 from folder post_densecrf_W4_XStd12_RStd5_PosW3_PosXStd3_numSample57
+##best jacc was 0.752056 from folder post_densecrf_W5_XStd12_RStd5_PosW3_PosXStd3_numSample57
+
 # specify the parameters
 MAX_ITER=10
 
 Bi_W=4
-Bi_X_STD=49
-Bi_Y_STD=49
+Bi_X_STD=49 #12 #49
+Bi_Y_STD=49 #12 #49
 Bi_R_STD=5
 Bi_G_STD=5 
 Bi_B_STD=5
@@ -38,6 +43,10 @@ POS_Y_STD=3
 #######################################
 # MODIFY THE PATH FOR YOUR SETTING
 #######################################
+if [ ${CORRUPTED} -eq 1 ]; then
+  TEST_SET=corrupted_${TEST_SET}
+fi
+
 TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 
 ROOT_DIR=/home/afriesen/proj/external/caffe
@@ -51,7 +60,11 @@ CRF_DIR=${ROOT_DIR}/densecrf
 
 if [ ${DATASET} == "sbd" ]
 then
+  if [ ${CORRUPTED} -eq 1 ]; then
+    IMG_DIR_NAME=data/iccv09Data/corrupted_images
+  else
     IMG_DIR_NAME=data/iccv09Data/images
+  fi
 elif [ ${DATASET} == "voc12" ]
 then
     IMG_DIR_NAME=pascal/VOCdevkit/VOC2012
