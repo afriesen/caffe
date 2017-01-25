@@ -28,7 +28,8 @@ fi
 ## Specify which model to train
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
-NET_ID=deeplab_resnet101
+#NET_ID=deeplab_resnet101
+NET_ID=deeplab_resnet101_final_only
 
 FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
@@ -46,7 +47,7 @@ FOLD_SUFFIX=".1"
 #TRAIN_SET_WEAK_LEN=5000
 
 USE_GPU=1
-DEV_ID=1
+DEV_ID=0
 
 #####
 
@@ -54,7 +55,7 @@ DEV_ID=1
 
 CONFIG_DIR=${EXP}/config/${NET_ID}
 MODEL_DIR=${EXP}/model/${NET_ID}
-MODEL_DIR=${EXP}/model/${NET_ID}/fold1/sqr_lr1e-4
+#MODEL_DIR=${EXP}/model/${NET_ID}/fold1/sqr_lr1e-4
 #MODEL_DIR=${EXP}/model/${NET_ID}/fold2/squareimgs161_lr1e-4
 #MODEL_DIR=${EXP}/model/${NET_ID}/fold1/rect_imgs
 mkdir -p ${MODEL_DIR}
@@ -83,24 +84,25 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 #				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
 #    fi
     #
-    MODEL=${MODEL_DIR}/init.caffemodel
+#    MODEL=${MODEL_DIR}/init.caffemodel
+    MODEL=${EXP}/model/init.caffemodel
     #
     echo Training net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} using weights from ${MODEL}
     for pname in train solver; do
 				sed "$(eval echo $(cat sub.sed))" \
 						${CONFIG_DIR}/${pname}.prototxt > ${CONFIG_DIR}/${pname}_${TRAIN_SET}.prototxt
     done
-        CMD="${CAFFE_BIN} train \
+    CMD="${CAFFE_BIN} train \
            --solver=${CONFIG_DIR}/solver_${TRAIN_SET}.prototxt" 
-        if [ ${USE_GPU} -ne 0 ]; then
-        	CMD="${CMD} --gpu=${DEV_ID}"
-		fi
-		if [ -f ${MODEL} ]; then
-			CMD="${CMD} --weights=${MODEL}"
-		fi
-#                CMD="${CMD} --snapshot=${MODEL_DIR}/${TRAIN_SET}_iter_2026.solverstate"
+    if [ ${USE_GPU} -ne 0 ]; then
+        CMD="${CMD} --gpu=${DEV_ID}"
+    fi
+    if [ -f ${MODEL} ]; then
+       CMD="${CMD} --weights=${MODEL}"
+    fi
+#    CMD="${CMD} --snapshot=${MODEL_DIR}/${TRAIN_SET}_iter_2026.solverstate"
 
-		echo Running ${CMD} && ${CMD}
+    echo Running ${CMD} && ${CMD}
 fi
 
 ## Test #1 specification (on val or test)
@@ -126,7 +128,7 @@ if [ ${RUN_TEST} -eq 1 ]; then
 #		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
 		sed "$(eval echo $(cat sub.sed))" \
 				${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
-		CMD="${CAFFE_BIN} test \
+        CMD="${CAFFE_BIN} test \
              --model=${CONFIG_DIR}/test_${TEST_SET}.prototxt \
              --weights=${MODEL} \
              --iterations=${TEST_ITER}"

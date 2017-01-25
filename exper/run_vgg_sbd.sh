@@ -8,7 +8,6 @@ SSPN_DIR=../../../sspn
 #CAFFE_DIR=../code
 #CAFFE_BIN=${CAFFE_DIR}/.build_release/tools/caffe.bin
 #CAFFE_BIN=${CAFFE_DIR}/build/tools/caffe
-#CAFFE_BIN=${CAFFE_DIR}/build/tools/caffe
 CAFFE_BIN=${SSPN_DIR}/build/caffe_sspn
 
 EXP=sbd
@@ -17,8 +16,8 @@ if [ "${EXP}" = "sbd" ]; then
     NUM_LABELS=8
 #    DATA_ROOT=${ROOT_DIR}/rmt/data/pascal/VOCdevkit/VOC2012
 #    DATA_ROOT="/home/afriesen/proj/data/VOCdevkit/VOC2012"
-    DATA_ROOT="/home/afriesen/proj/sspn/data/iccv09Data/"
 #    DATA_ROOT="/Users/afriesen/proj/sspn/data/iccv09Data/"
+    DATA_ROOT="/raid/afriesen/proj/sspn/data/iccv09Data/"
 else
     NUM_LABELS=0
     echo "Wrong exp name"
@@ -28,7 +27,8 @@ fi
 ## Specify which model to train
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
-NET_ID=deeplab_resnet101
+#NET_ID=deeplab_resnet101
+NET_ID=deeplab_vgg
 
 FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
@@ -46,7 +46,7 @@ FOLD_SUFFIX=".1"
 #TRAIN_SET_WEAK_LEN=5000
 
 USE_GPU=1
-DEV_ID=1
+DEV_ID=2
 
 #####
 
@@ -54,9 +54,6 @@ DEV_ID=1
 
 CONFIG_DIR=${EXP}/config/${NET_ID}
 MODEL_DIR=${EXP}/model/${NET_ID}
-MODEL_DIR=${EXP}/model/${NET_ID}/fold1/sqr_lr1e-4
-#MODEL_DIR=${EXP}/model/${NET_ID}/fold2/squareimgs161_lr1e-4
-#MODEL_DIR=${EXP}/model/${NET_ID}/fold1/rect_imgs
 mkdir -p ${MODEL_DIR}
 LOG_DIR=${EXP}/log/${NET_ID}
 mkdir -p ${LOG_DIR}
@@ -83,7 +80,8 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 #				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
 #    fi
     #
-    MODEL=${MODEL_DIR}/init.caffemodel
+#    MODEL=${EXP}/model/${NET_ID}/init.caffemodel
+    MODEL=${EXP}/model/vgg16/init.caffemodel
     #
     echo Training net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} using weights from ${MODEL}
     for pname in train solver; do
@@ -98,7 +96,7 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
 		if [ -f ${MODEL} ]; then
 			CMD="${CMD} --weights=${MODEL}"
 		fi
-#                CMD="${CMD} --snapshot=${MODEL_DIR}/${TRAIN_SET}_iter_2026.solverstate"
+#                CMD="${CMD} --snapshot=${EXP}/model/${NET_ID}/${TRAIN_SET}_iter_2026.solverstate"
 
 		echo Running ${CMD} && ${CMD}
 fi
@@ -107,21 +105,18 @@ fi
 
 if [ ${RUN_TEST} -eq 1 ]; then
     #
-#    for TEST_SET in val; do
-    for TEST_SET in test; do
-#    for TEST_SET in train; do
+    for TEST_SET in val; do
 		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
 		echo TEST ITER = "${TEST_ITER}"
-		MODEL=${MODEL_DIR}/test${FOLD_SUFFIX}.caffemodel
+		MODEL=${EXP}/model/${NET_ID}/test${FOLD_SUFFIX}.caffemodel
 		if [ ! -f ${MODEL} ]; then
-                    MODEL=`ls -t ${MODEL_DIR}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
-		fi 
+				MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
+		fi
 		#
 		echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
 		FEATURE_DIR=${EXP}/features/${NET_ID}
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc1
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
+		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
 #		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
 #		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
 		sed "$(eval echo $(cat sub.sed))" \
@@ -133,8 +128,8 @@ if [ ${RUN_TEST} -eq 1 ]; then
 #             --gpu=${DEV_ID} \
         if [ ${USE_GPU} -ne 0 ]; then
         	CMD="${CMD} --gpu=${DEV_ID}"
-	fi
-	echo Running ${CMD} && ${CMD}
+		fi
+		echo Running ${CMD} && ${CMD}
     done
 fi
 
@@ -152,9 +147,9 @@ if [ ${RUN_TRAIN2} -eq 1 ]; then
 #				comm -3 ${LIST_DIR}/${TRAIN_SET}.txt ${LIST_DIR}/${TRAIN_SET_STRONG}.txt | head -n ${TRAIN_SET_WEAK_LEN} > ${LIST_DIR}/${TRAIN_SET_WEAK}.txt
 #    fi
     #
-    MODEL=${MODEL_DIR}/init2${FOLD_SUFFIX}.caffemodel
+    MODEL=${EXP}/model/${NET_ID}/init2${FOLD_SUFFIX}.caffemodel
     if [ ! -f ${MODEL} ]; then
-				MODEL=`ls -t ${MODEL_DIR}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
+				MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
     fi
     #
     echo Training2 net ${EXP}/${NET_ID}
@@ -178,19 +173,18 @@ if [ ${RUN_TEST2} -eq 1 ]; then
     #
     for TEST_SET in val test; do
 #    for TEST_SET in val; do
-		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
+		TEST_SET = ${TEST_SET}${FOLD_SUFFIX}
 		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
-		MODEL=${MODEL_DIR}/test2${FOLD_SUFFIX}.caffemodel
+		MODEL=${EXP}/model/${NET_ID}/test2${FOLD_SUFFIX}.caffemodel
 		if [ ! -f ${MODEL} ]; then
-			MODEL=`ls -t ${MODEL_DIR}/train2${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
+			MODEL=`ls -t ${EXP}/model/${NET_ID}/train2${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
 		fi
 		#
 		echo Testing2 net ${EXP}/${NET_ID}
 		FEATURE_DIR=${EXP}/features2/${NET_ID}
+		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
+		mkdir -p ${FEATURE_DIR}/${TEST_SET}/crf
 		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc1
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/crf
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc1
 		sed "$(eval echo $(cat sub.sed))" \
 				${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
 		CMD="${CAFFE_BIN} test \
@@ -200,7 +194,7 @@ if [ ${RUN_TEST2} -eq 1 ]; then
 #             --gpu=${DEV_ID} \
     	if [ ${USE_GPU} -ne 0 ]; then
       		CMD="${CMD} --gpu=${DEV_ID}"
-	fi
-	echo Running ${CMD} && ${CMD}
+		fi
+		echo Running ${CMD} && ${CMD}
     done
 fi

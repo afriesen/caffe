@@ -25,6 +25,7 @@ fi
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
 NET_ID=deeplab_resnet101
+#NET_ID=deeplab_vgg
 
 FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
@@ -41,8 +42,8 @@ FOLD_SUFFIX=".1"
 
 #TRAIN_SET_WEAK_LEN=5000
 
-USE_GPU=0
-DEV_ID=1
+USE_GPU=1
+DEV_ID=2
 
 #####
 
@@ -57,7 +58,7 @@ export GLOG_log_dir=${LOG_DIR}
 
 ## Run
 
-RUN_TRAIN=0
+RUN_TRAIN=1
 RUN_TEST=1
 RUN_TRAIN2=0
 RUN_TEST2=0
@@ -112,8 +113,8 @@ if [ ${RUN_TEST} -eq 1 ]; then
 		echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
 		FEATURE_DIR=${EXP}/features/${NET_ID}
 		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
+#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
+#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
 		sed "$(eval echo $(cat sub.sed))" \
 				${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
 		CMD="${CAFFE_BIN} test \

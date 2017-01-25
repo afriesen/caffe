@@ -21903,7 +21903,8 @@ layer {
     pairwise_features: PixelIntensity
 #    pairwise_features: TextonBoost
 #    pairwise_features: Input
-    pairwise_factor_multiplier: 4
+#    pairwise_factor_multiplier: 2
+#    pairwise_factor_multiplier: 4
 #    pairwise_factor_multiplier: 8
 #    pairwise_factor_multiplier: 12
 #    pairwise_factor_multiplier: 16
@@ -21915,6 +21916,7 @@ layer {
 #    pairwise_factor_multiplier: 256 
 #    pairwise_factor_multiplier: 0 
 #    pairwise_factor_multiplier: 0.5
+    pairwise_factor_multiplier: 1.5 
     grammar {
       symbol { id: 0 name: "Scene"  type: Nonterminal }
       symbol { id: 1 name: "Sky"    type: Terminal label_id: 0 }

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PRINT_CMD_ONLY=0
+
 ## MODIFY PATH for YOUR SETTING
 ROOT_DIR=
 
@@ -30,13 +32,11 @@ fi
 #NET_ID=deeplab_resnet101
 NET_ID=sspn_mbest_flat_deeplab_resnet101
 
-FOLD_SUFFIX=".2"
+FOLD_SUFFIX=".1"
 #FOLD_SUFFIX=".oneimg"
 
 USE_GPU=1
 DEV_ID=0
-
-PRINT_CMD_ONLY=0
 
 #####
 
@@ -54,7 +54,7 @@ export GLOG_log_dir=${LOG_DIR}
 ## Run
 
 RUN_TRAIN=1
-RUN_TEST=0
+RUN_TEST=1
 RUN_TRAIN2=0
 RUN_TEST2=0
 
@@ -92,8 +92,8 @@ fi
 
 if [ ${RUN_TEST} -eq 1 ]; then
     #
-#    for TEST_SET in val; do
-    for TEST_SET in test; do
+    for TEST_SET in val; do
+#    for TEST_SET in test; do
 		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
 		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
 		echo TEST ITER = "${TEST_ITER}"
