@@ -28,6 +28,8 @@ template <> enum matio_classes matio_class_map<float>() { return MAT_C_SINGLE; }
 template <> enum matio_classes matio_class_map<double>() { return MAT_C_DOUBLE; }
 template <> enum matio_classes matio_class_map<int>() { return MAT_C_INT32; }
 template <> enum matio_classes matio_class_map<unsigned int>() { return MAT_C_UINT32; }
+template <> enum matio_classes matio_class_map<short>() { return MAT_C_INT16; }
+template <> enum matio_classes matio_class_map<unsigned short>() { return MAT_C_UINT16; }
 
 template <typename Dtype>
 void ReadBlobFromMat(const char *fname, Blob<Dtype>* blob) {
@@ -117,7 +119,7 @@ cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field
 
     m_out.create(matvar->rank > 1 ? matvar->dims[1] : 1,
             matvar->rank > 0 ? matvar->dims[0] : 0,
-            cv::DataType<float>::type );
+            cv::DataType<Dtype>::type );
 
     Dtype * data = m_out.ptr< Dtype >( 0 );
 
@@ -146,5 +148,9 @@ template void WriteBlobToMat<unsigned int>(const char*, bool, Blob<unsigned int>
 #ifdef USE_OPENCV
 template cv::Mat ReadCVMatFromMat<float>(const string & filename, const string & field_name);
 template cv::Mat ReadCVMatFromMat<double>(const string & filename, const string & field_name);
+template cv::Mat ReadCVMatFromMat<int>(const string & filename, const string & field_name);
+template cv::Mat ReadCVMatFromMat<unsigned int>(const string & filename, const string & field_name);
+template cv::Mat ReadCVMatFromMat<short>(const string & filename, const string & field_name);
+template cv::Mat ReadCVMatFromMat<unsigned short>(const string & filename, const string & field_name);
 #endif // USE_OPENCV
 }
