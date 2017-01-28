@@ -18,6 +18,8 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/rng.hpp"
 
+#include "caffe/util/matio_io.hpp"
+
 namespace caffe {
 
 template <typename Dtype>
@@ -226,17 +228,24 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     if (label_type == ImageDataParameter_LabelType_PIXEL) {
       if (matchExt(lines_[lines_id_].second, "txt")
           || matchExt(lines_[lines_id_].second, "csv")) {
-        cv::Mat lbls = ReadCSVToCVMat(root_folder + lines_[lines_id_].second);
-        CHECK_EQ(lbls.rows, cv_img_seg[0].rows);
-        CHECK_EQ(lbls.cols, cv_img_seg[0].cols);
+        cv::Mat lbls = ReadCSVToCVMat( root_folder + lines_[lines_id_].second );
+        CHECK_EQ( lbls.rows, cv_img_seg[0].rows );
+        CHECK_EQ( lbls.cols, cv_img_seg[0].cols );
 //        LOG(INFO) << "loaded labels from " << lines_[lines_id_].second << " with size " << lbls.rows << " x " << lbls.cols;
         cv::Mat lbls2;
-        lbls.setTo(255, lbls < 0); // ensure negative labels are properly converted
-        lbls.convertTo(lbls2, CV_8U);
-        if (new_height > 0 && new_width > 0) {
-            cv::resize(lbls2, lbls2, cv::Size(new_width, new_height), 0, 0, cv::INTER_NEAREST);
+        lbls.setTo( 255, lbls < 0 ); // ensure negative labels are properly converted
+        lbls.convertTo( lbls2, CV_8U );
+        if ( new_height > 0 && new_width > 0 ) {
+          cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
         }
-        cv_img_seg.push_back(lbls2);
+        cv_img_seg.push_back( lbls2 );
+      } else if ( matchExt(lines_[lines_id_].second, "mat") ) {
+        // TODO(af): make 'LabelMap' a parameter
+        cv::Mat lbls = ReadCVMatFromMat(root_folder + lines_[lines_id_].second, "LabelMap");
+        if ( new_height > 0 && new_width > 0 ) {
+          cv::resize( lbls, lbls, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+        }
+        cv_img_seg.push_back(lbls);
       } else {
         cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].second,
 		  			    new_height, new_width, false));

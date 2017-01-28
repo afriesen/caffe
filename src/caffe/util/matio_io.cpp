@@ -3,6 +3,12 @@
 #include <fstream>  // NOLINT(readability/streams)
 #include <string>
 #include <vector>
+
+#ifdef USE_OPENCV
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#endif  // USE_OPENCV
+
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
 #include "caffe/proto/caffe.pb.h"
@@ -92,6 +98,43 @@ void WriteBlobToMat(const char *fname, bool write_diff,
   Mat_Close(matfp);
 }
 
+
+#ifdef USE_OPENCV
+template< typename Dtype >
+cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field_name) {
+  cv::Mat m_out;
+  mat_t *matfp;
+  matfp = Mat_Open(filename.c_str(), MAT_ACC_RDONLY);
+  CHECK(matfp) << "Error opening MAT file " << filename;
+  // Read data
+  matvar_t *matvar;
+  matvar = Mat_VarReadInfo(matfp, field_name.c_str());
+  CHECK(matvar) << "Field '" << field_name << "' not present in MAT file " << filename;
+  {
+    CHECK_EQ(matvar->class_type, matio_class_map<Dtype>())
+      << "Field 'data' must be of the right class (single/double) in MAT file " << filename;
+    CHECK(matvar->rank < 3) << "Field '" << field_name << "' cannot have ndims > 2 in MAT file " << filename;
+
+    m_out.create(matvar->rank > 1 ? matvar->dims[1] : 1,
+            matvar->rank > 0 ? matvar->dims[0] : 0,
+            cv::DataType<float>::type );
+
+//    blob->Reshape((matvar->rank > 3) ? matvar->dims[3] : 1,
+//            (matvar->rank > 2) ? matvar->dims[2] : 1,
+//            (matvar->rank > 1) ? matvar->dims[1] : 1,
+//            (matvar->rank > 0) ? matvar->dims[0] : 0);
+//    Dtype* data = blob->mutable_cpu_data();
+    Dtype * data = static_cast< Dtype * >( m_out.data );
+    int ret = Mat_VarReadDataLinear(matfp, matvar, data, 0, 1, m_out.total());
+    CHECK(ret == 0) << "Error reading array '" << field_name << "' from MAT file " << filename;
+    Mat_VarFree(matvar);
+  }
+  Mat_Close(matfp);
+}
+
+#endif // USE_OPENCV
+
+
 template void ReadBlobFromMat<float>(const char*, Blob<float>*);
 template void ReadBlobFromMat<double>(const char*, Blob<double>*);
 template void ReadBlobFromMat<int>(const char*, Blob<int>*);
@@ -102,4 +145,9 @@ template void WriteBlobToMat<double>(const char*, bool, Blob<double>*);
 template void WriteBlobToMat<int>(const char*, bool, Blob<int>*);
 template void WriteBlobToMat<unsigned int>(const char*, bool, Blob<unsigned int>*);
 
+
+#ifdef USE_OPENCV
+template cv::Mat ReadCVMatFromMat<float>(const char * filename);
+template cv::Mat ReadCVMatFromMat<double>(const char * filename);
+#endif // USE_OPENCV
 }

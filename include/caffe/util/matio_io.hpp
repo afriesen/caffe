@@ -20,6 +20,12 @@ template <typename Dtype>
 void WriteBlobToMat(const char *fname, bool write_diff,
    Blob<Dtype>* blob);
 
+#ifdef USE_OPENCV
+template< typename Dtype >
+cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field_name);
+
+#endif // USE_OPENCV
+
 }  // namespace caffe
 
 #endif   // CAFFE_UTIL_IO_H_
