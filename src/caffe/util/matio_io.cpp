@@ -117,8 +117,8 @@ cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field
       << "Field 'data' must be of the right class (single/double) in MAT file " << filename;
     CHECK(matvar->rank < 3) << "Field '" << field_name << "' cannot have ndims > 2 in MAT file " << filename;
 
-    m_out.create(matvar->rank > 1 ? matvar->dims[1] : 1,
-            matvar->rank > 0 ? matvar->dims[0] : 0,
+    m_out.create(matvar->rank > 0 ? matvar->dims[0] : 0,
+            matvar->rank > 1 ? matvar->dims[1] : 1,
             cv::DataType<Dtype>::type );
 
     Dtype * data = m_out.ptr< Dtype >( 0 );

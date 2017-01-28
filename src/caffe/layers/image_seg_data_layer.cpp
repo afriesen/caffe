@@ -241,13 +241,13 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
         cv_img_seg.push_back( lbls2 );
       } else if ( matchExt(lines_[lines_id_].second, "mat") ) {
         // TODO(af): make 'LabelMap' a parameter
-        cv::Mat lbls = ReadCVMatFromMat<short>(root_folder + lines_[lines_id_].second, "LabelMap");
+        cv::Mat lbls = ReadCVMatFromMat<unsigned short>(root_folder + lines_[lines_id_].second, "LabelMap");
         cv::Mat lbls2;
         lbls.convertTo( lbls2, CV_8U );
         if ( new_height > 0 && new_width > 0 ) {
-          cv::resize( lbls, lbls, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+          cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
         }
-        cv_img_seg.push_back(lbls);
+        cv_img_seg.push_back(lbls2);
       } else {
         cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].second,
 		  			    new_height, new_width, false));
