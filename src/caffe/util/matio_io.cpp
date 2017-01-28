@@ -119,17 +119,14 @@ cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field
             matvar->rank > 0 ? matvar->dims[0] : 0,
             cv::DataType<float>::type );
 
-//    blob->Reshape((matvar->rank > 3) ? matvar->dims[3] : 1,
-//            (matvar->rank > 2) ? matvar->dims[2] : 1,
-//            (matvar->rank > 1) ? matvar->dims[1] : 1,
-//            (matvar->rank > 0) ? matvar->dims[0] : 0);
-//    Dtype* data = blob->mutable_cpu_data();
-    Dtype * data = static_cast< Dtype * >( m_out.data );
+    Dtype * data = m_out.ptr< Dtype >( 0 );
+
     int ret = Mat_VarReadDataLinear(matfp, matvar, data, 0, 1, m_out.total());
     CHECK(ret == 0) << "Error reading array '" << field_name << "' from MAT file " << filename;
     Mat_VarFree(matvar);
   }
   Mat_Close(matfp);
+  return m_out;
 }
 
 #endif // USE_OPENCV
@@ -147,7 +144,7 @@ template void WriteBlobToMat<unsigned int>(const char*, bool, Blob<unsigned int>
 
 
 #ifdef USE_OPENCV
-template cv::Mat ReadCVMatFromMat<float>(const char * filename);
-template cv::Mat ReadCVMatFromMat<double>(const char * filename);
+template cv::Mat ReadCVMatFromMat<float>(const string & filename, const string & field_name);
+template cv::Mat ReadCVMatFromMat<double>(const string & filename, const string & field_name);
 #endif // USE_OPENCV
 }
