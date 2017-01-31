@@ -1300,9 +1300,13 @@ message SSPNParameter {
   // using a sum node instead of a max node in the corresponding SPN (TRAIN only)
   optional bool sum_over_start_sym_productions = 19 [default = false];
 
-  // whether or not to use the production cost of the top productions when computing the gradient
-  // (only applies when summing over start symbol productions)
+  // whether or not to use the production cost of the top productions
   optional bool use_start_sym_prod_cost = 20 [default = true];
+
+  // parameters for initializing pairwise (boundary) factors from dataset counts
+  optional bool initialize_pairwise_factors_from_dataset = 21 [default = false];
+  optional string dataset_root = 22; // root folder containing the dataset
+  optional string dataset_source = 23; // file containing the list of the files in the dataset
 }
 
 message TanHParameter {
