@@ -1305,7 +1305,7 @@ message SSPNParameter {
 
   // parameters for initializing pairwise (boundary) factors from dataset counts
   optional bool initialize_pairwise_factors_from_dataset = 21 [default = false];
-  optional string dataset_root = 22; // root folder containing the dataset
+  optional string dataset_root = 22;   // root folder containing the dataset
   optional string dataset_source = 23; // file containing the list of the files in the dataset
 }
 
