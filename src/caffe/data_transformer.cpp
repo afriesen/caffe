@@ -471,12 +471,13 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
   const int label_height   = transformed_label_blob->height();
   const int label_width    = transformed_label_blob->width();
 
-  CHECK_EQ(seg_channels, 1);
+//  CHECK_EQ(seg_channels, 1);
   CHECK_EQ(img_channels, data_channels);
   CHECK_EQ(img_height, seg_height);
   CHECK_EQ(img_width, seg_width);
 
-  CHECK_EQ(label_channels, 1);
+//  CHECK_EQ(label_channels, 1);
+  CHECK_EQ(seg_channels, label_channels);
   CHECK_EQ(data_height, label_height);
   CHECK_EQ(data_width, label_width);
 
@@ -486,8 +487,8 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
       << "Seg data type must be unsigned byte";
 
   //const int crop_size = param_.crop_size();
-  int crop_width = 0;
-  int crop_height = 0;
+  int crop_width = img_width;
+  int crop_height = img_height;
   CHECK((!param_.has_crop_size() && param_.has_crop_height() && param_.has_crop_width())
 	|| (!param_.has_crop_height() && !param_.has_crop_width()))
     << "Must either specify crop_size or both crop_height and crop_width.";
@@ -567,7 +568,7 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
           cv::Scalar(mean_values_[0], mean_values_[1], mean_values_[2]));
     cv::copyMakeBorder(cv_cropped_seg, cv_cropped_seg, 0, pad_height,
           0, pad_width, cv::BORDER_CONSTANT,
-          cv::Scalar(ignore_label));
+          cv::Scalar(ignore_label,ignore_label,ignore_label,ignore_label));
     // update height/width
     img_height   = cv_cropped_img.rows;
     img_width    = cv_cropped_img.cols;
@@ -604,6 +605,11 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
   const double* data_ptr;
   const uchar* label_ptr;
 
+  CHECK_EQ(data_height, cv_cropped_img.rows);
+  CHECK_EQ(data_width, cv_cropped_img.cols);
+  CHECK_EQ(data_height, cv_cropped_seg.rows);
+  CHECK_EQ(data_width, cv_cropped_seg.cols);
+
   for (int h = 0; h < data_height; ++h) {
     data_ptr = cv_cropped_img.ptr<double>(h);
     label_ptr = cv_cropped_seg.ptr<uchar>(h);
@@ -619,15 +625,14 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
         } else {
           top_index = (c * data_height + h) * data_width + w;
         }
+        CHECK_LT(top_index, transformed_data_blob->count());
         Dtype pixel = static_cast<Dtype>(data_ptr[data_index++]);
         if (has_mean_file) {
           int mean_index = (c * img_height + h_off + h) * img_width + w_off + w;
-          transformed_data[top_index] =
-            (pixel - mean[mean_index]) * scale;
+          transformed_data[top_index] = (pixel - mean[mean_index]) * scale;
         } else {
           if (has_mean_values) {
-            transformed_data[top_index] =
-              (pixel - mean_values_[c]) * scale;
+            transformed_data[top_index] = (pixel - mean_values_[c]) * scale;
           } else {
             transformed_data[top_index] = pixel * scale;
           }
@@ -635,13 +640,21 @@ void DataTransformer<Dtype>::TransformImgAndSeg(
       }
 
       // for segmentation
-      if (do_mirror) {
-        top_index = h * data_width + data_width - 1 - w;
-      } else {
-        top_index = h * data_width + w;
+      for (int c = 0; c < seg_channels; ++c ) {
+        if ( do_mirror) {
+          top_index = (c * data_height + h) * data_width + (data_width - 1 - w);
+        } else {
+          top_index = (c * data_height + h) * data_width + w;
+        }
+        CHECK_LT(top_index, transformed_label_blob->count());
+        Dtype pixel = static_cast<Dtype>(label_ptr[label_index++]);
+        transformed_label[top_index] = pixel;
       }
-      Dtype pixel = static_cast<Dtype>(label_ptr[label_index++]);
-      transformed_label[top_index] = pixel;
+//      if (do_mirror) {
+//        top_index = h * data_width + data_width - 1 - w;
+//      } else {
+//        top_index = h * data_width + w;
+//      }
     }
   }
 }

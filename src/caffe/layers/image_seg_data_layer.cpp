@@ -35,6 +35,7 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
   const bool is_color  = this->layer_param_.image_data_param().is_color();
   const int label_type = this->layer_param_.image_data_param().label_type();
   string root_folder = this->layer_param_.image_data_param().root_folder();
+  label_channels_ = this->layer_param_.image_data_param().label_channels();
 
   TransformationParameter transform_param = this->layer_param_.transform_param();
   CHECK(transform_param.has_mean_file() == false) << 
@@ -112,10 +113,10 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
     }
 
     //label
-    top[1]->Reshape(batch_size, 1, crop_height, crop_width);
-    this->transformed_label_.Reshape(batch_size, 1, crop_height, crop_width);
+    top[1]->Reshape(batch_size, label_channels_, crop_height, crop_width);
+    this->transformed_label_.Reshape(batch_size, label_channels_, crop_height, crop_width);
     for (int i = 0; i < this->prefetch_.size(); ++i) {
-      this->prefetch_[i]->label_.Reshape(batch_size, 1, crop_height, crop_width);
+      this->prefetch_[i]->label_.Reshape(batch_size, label_channels_, crop_height, crop_width);
     }
   } else {
     top[0]->Reshape(batch_size, channels, height, width);
@@ -125,10 +126,10 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
     }
 
     //label
-    top[1]->Reshape(batch_size, 1, height, width);
-    this->transformed_label_.Reshape(batch_size, 1, height, width);
+    top[1]->Reshape(batch_size, label_channels_, height, width);
+    this->transformed_label_.Reshape(batch_size, label_channels_, height, width);
     for (int i = 0; i < this->prefetch_.size(); ++i) {
-      this->prefetch_[i]->label_.Reshape(batch_size, 1, height, width);
+      this->prefetch_[i]->label_.Reshape(batch_size, label_channels_, height, width);
     }
   }
 
@@ -192,12 +193,12 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   // Use data_transformer to infer the expected blob shape from a cv_img.
   vector<int> top_shape = this->data_transformer_->InferBlobShape(cv_img);
   this->transformed_data_.Reshape(top_shape);
-  this->transformed_label_.Reshape(top_shape[0], 1, top_shape[2], top_shape[3]);
+  this->transformed_label_.Reshape(top_shape[0], label_channels_, top_shape[2], top_shape[3]);
 //  LOG(INFO) << "reshaping like image " << lines_[lines_id_].first << ": " << top_shape[0] << ", " << top_shape[1] << ", " << top_shape[2] << ", " << top_shape[3];
   // Reshape batch according to the batch_size.
   top_shape[0] = batch_size;
   batch->data_.Reshape(top_shape);
-  batch->label_.Reshape(top_shape[0], 1, top_shape[2], top_shape[3]);
+  batch->label_.Reshape(top_shape[0], label_channels_, top_shape[2], top_shape[3]);
 
   Dtype* top_data     = batch->data_.mutable_cpu_data();
   Dtype* top_label    = batch->label_.mutable_cpu_data(); 
@@ -215,8 +216,6 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].first,
 	  new_height, new_width, is_color, &img_row, &img_col));
 
-//LOG(INFO) << "loaded image: " << root_folder + lines_[lines_id_].first << " with size " << cv_img_seg.back().rows << " x " << cv_img_seg.back().cols;
-
     // TODO(jay): implement resize in ReadImageToCVMat
     // NOTE data_dim may not work when min_scale and max_scale != 1
     top_data_dim[top_data_dim_offset]     = static_cast<Dtype>(std::min(max_height, img_row));
@@ -226,35 +225,9 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       DLOG(INFO) << "Fail to load img: " << root_folder + lines_[lines_id_].first;
     }
     if (label_type == ImageDataParameter_LabelType_PIXEL) {
-      if (matchExt(lines_[lines_id_].second, "txt")
-          || matchExt(lines_[lines_id_].second, "csv")) {
-        cv::Mat lbls = ReadCSVToCVMat( root_folder + lines_[lines_id_].second );
-        CHECK_EQ( lbls.rows, cv_img_seg[0].rows );
-        CHECK_EQ( lbls.cols, cv_img_seg[0].cols );
-//        LOG(INFO) << "loaded labels from " << lines_[lines_id_].second << " with size " << lbls.rows << " x " << lbls.cols;
-        cv::Mat lbls2;
-        lbls.setTo( 255, lbls < 0 ); // ensure negative labels are properly converted
-        lbls.convertTo( lbls2, CV_8U );
-        if ( new_height > 0 && new_width > 0 ) {
-          cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
-        }
-        cv_img_seg.push_back( lbls2 );
-      } else if ( matchExt(lines_[lines_id_].second, "mat") ) {
-        // TODO(af): make 'LabelMap' a parameter
-        cv::Mat lbls = ReadCVMatFromMat<unsigned short>(root_folder + lines_[lines_id_].second, "LabelMap");
-        cv::Mat lbls2;
-        lbls.convertTo( lbls2, CV_8U );
-        if ( new_height > 0 && new_width > 0 ) {
-          cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
-        }
-        cv_img_seg.push_back(lbls2);
-      } else {
-        cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].second,
-		  			    new_height, new_width, false));
-      }
-
-      if (!cv_img_seg[1].data) {
-	DLOG(INFO) << "Fail to load seg: " << root_folder + lines_[lines_id_].second;
+      read_pixel_labels(root_folder, lines_[lines_id_].second, new_height, new_width, cv_img_seg);
+      if (cv_img_seg.size() < 2 || !cv_img_seg[1].data) {
+	    DLOG(INFO) << "Fail to load seg: " << root_folder + lines_[lines_id_].second;
       }
     }
     else if (label_type == ImageDataParameter_LabelType_IMAGE) {
@@ -277,7 +250,7 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     this->transformed_data_.set_cpu_data(top_data + offset);
     offset = batch->label_.offset(item_id);
     this->transformed_label_.set_cpu_data(top_label + offset);
-    this->data_transformer_->TransformImgAndSeg(cv_img_seg, 
+    this->data_transformer_->TransformImgAndSeg(cv_img_seg,
 	 &(this->transformed_data_), &(this->transformed_label_),
 	 ignore_label);
     trans_time += timer.MicroSeconds();
@@ -288,7 +261,7 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       DLOG(INFO) << "Restarting data prefetching from start.";
       lines_id_ = 0;
       if (this->layer_param_.image_data_param().shuffle()) {
-	ShuffleImages();
+	    ShuffleImages();
       }
     }
   }
@@ -296,6 +269,61 @@ void ImageSegDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   DLOG(INFO) << "Prefetch batch: " << batch_timer.MilliSeconds() << " ms.";
   DLOG(INFO) << "     Read time: " << read_time / 1000 << " ms.";
   DLOG(INFO) << "Transform time: " << trans_time / 1000 << " ms.";
+}
+
+template <typename Dtype>
+void ImageSegDataLayer<Dtype>::read_pixel_labels(const string & root_folder,
+        const string & filename, int new_height, int new_width,
+        std::vector<cv::Mat> & cv_img_seg) {
+
+  if (matchExt(filename, "txt") || matchExt(filename, "csv")) {
+    cv::Mat lbls = ReadCSVToCVMat( root_folder + filename );
+    CHECK_EQ( lbls.rows, cv_img_seg[0].rows );
+    CHECK_EQ( lbls.cols, cv_img_seg[0].cols );
+//        LOG(INFO) << "loaded labels from " << filename << " with size " << lbls.rows << " x " << lbls.cols;
+    cv::Mat lbls2;
+    lbls.setTo( 255, lbls < 0 ); // ensure negative labels are properly converted
+    lbls.convertTo( lbls2, CV_8U );
+    if ( new_height > 0 && new_width > 0 ) {
+        cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+    }
+    cv_img_seg.push_back( lbls2 );
+  } else if ( matchExt(filename, "mat") ) {
+    // TODO: make 'LabelMap' a parameter
+    cv::Mat lbls = ReadCVMatFromMat(root_folder + filename, "LabelMap", true, true);
+//    LOG(INFO) << "loaded labels from " << filename << " with size " << lbls.rows << " x "
+//              << lbls.cols << ", c=" << lbls.channels() << ", type=" << lbls.type() << std::endl;
+//    std::cout << "labels have dims " << lbls.dims << " with size "
+//              << (lbls.dims > 0 ? lbls.size[0] : -1) << ","
+//              << (lbls.dims > 1 ? lbls.size[1] : -1) << ","
+//              << (lbls.dims > 2 ? lbls.size[2] : -1) << std::endl;
+//    std::stringstream ss;
+//    for ( int ii = 0; ii < 10; ++ii ) {
+//        for ( int jj = 0; jj < 10; ++jj ) {
+//            for ( int kk = 0; kk < lbls.channels(); ++kk ) {
+//                int iii = ii*29, jjj = jj*39;
+//                if ( iii >= lbls.size[0] || jjj >= lbls.size[1] ) continue;
+//                ss << ((int*)lbls.data)[iii*lbls.cols*lbls.channels() + jjj*lbls.channels() + kk] << ", ";
+////                ss << lbls.at<int>( iii, jjj, kk ) << ", ";
+//            }
+//            ss << std::endl;
+//        }
+//        ss << std::endl;
+//    }
+//      LOG(FATAL) << " DIE " << std::endl << ss.str();
+    double minval, maxval;
+    cv::minMaxIdx( lbls, &minval, &maxval );
+    CHECK(minval >= 0 && maxval <= 255) << "Input labels will lose data if converted to CV_8U";
+    cv::Mat lbls2;
+    lbls.convertTo( lbls2, CV_8U );
+    if ( new_height > 0 && new_width > 0 ) {
+        cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+    }
+    cv_img_seg.push_back(lbls2);
+  } else {
+    cv_img_seg.push_back(ReadImageToCVMat(root_folder + filename,
+            new_height, new_width, false));
+  }
 }
 
 INSTANTIATE_CLASS(ImageSegDataLayer);

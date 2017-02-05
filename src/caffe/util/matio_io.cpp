@@ -13,7 +13,7 @@
 #include "caffe/common.hpp"
 #include "caffe/proto/caffe.pb.h"
 #include "caffe/util/io.hpp"
-#include <matio.h>
+#include "caffe/util/matio_io.hpp"
 
 namespace caffe {
 
@@ -100,10 +100,65 @@ void WriteBlobToMat(const char *fname, bool write_diff,
   Mat_Close(matfp);
 }
 
+std::string printvec(const vector<int> & vv) {
+    std::stringstream ss;
+    for ( int ii = 0; ii < vv.size(); ++ii ) ss << vv[ii] << ",";
+    return ss.str();
+}
 
 #ifdef USE_OPENCV
 template< typename Dtype >
-cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field_name) {
+int read_from_mat(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels) {
+  CHECK_EQ(matvar->class_type, matio_class_map<Dtype>()) << "MAT file field is the wrong class";
+
+  cv::Mat m_in;
+  vector< int > sizes;
+  for (int ii = matvar->rank-1; ii >= 0; --ii) sizes.push_back((int) matvar->dims[ii]);
+  m_in.create(matvar->rank, sizes.data(), cv::DataType<Dtype>::type);
+
+  Dtype * data = m_in.ptr< Dtype >( 0 );
+  int ret = Mat_VarReadDataLinear(matfp, matvar, data, 0, 1, m_in.total());
+
+  if ( transpose ) {
+    vector< int > sizes_t;
+    for (int ii = 0; ii < matvar->rank; ++ii) sizes_t.push_back((int) matvar->dims[ii]);
+    m.create(matvar->rank, sizes_t.data(), cv::DataType<Dtype>::type);
+    vector< int > idx(sizes.size(), 0), idx_t(sizes_t.size(), 0);
+
+    for (int ii = 0, jj; ii < m_in.total(); ++ii) {
+//    std::cout << "copying index " << printvec(idx) << " to index_t " << printvec(idx_t) << std::endl;
+      m.at<Dtype>(idx_t.data()) = m_in.at<Dtype>(idx.data());
+      for (jj = idx.size()-1; jj >= 0; --jj) {
+        if ( ++idx[jj] >= sizes[jj] ) idx[jj] = 0;
+        else break;
+      }
+      for (jj = idx.size()-1; jj >= 0; --jj ) idx_t[idx.size()-jj-1] = idx[jj];
+    }
+  } else {
+    m = m_in;
+  }
+
+  if ( use_channels && m.dims > 2 ) {
+    CHECK_EQ(m.dims, 3) << "Can only use channels if mat has 3 dimensions";
+    cv::Mat m_chan(m.total(), 1, m.depth());
+    m_chan = m_chan.reshape(m.size[2], m.size[0]);
+    CHECK_EQ(m_chan.total()*m_chan.channels(), m.total());
+    for (int ii = 0, idx; ii < m.size[0]; ++ii) {
+      for (int jj = 0; jj < m.size[1]; ++jj) {
+        for (int kk = 0; kk < m.size[2]; ++kk){
+          idx = ii * m.size[1] * m.size[2] + jj * m.size[2] + kk;
+          ((Dtype*)m_chan.data)[idx] = m.at<Dtype>(ii, jj, kk);
+        }
+      }
+    }
+    m = m_chan;
+  }
+
+  return ret;
+}
+
+cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field_name,
+        bool transpose, bool use_channels) {
   cv::Mat m_out;
   mat_t *matfp;
   matfp = Mat_Open(filename.c_str(), MAT_ACC_RDONLY);
@@ -113,20 +168,34 @@ cv::Mat ReadCVMatFromMat(const std::string & filename, const std::string & field
   matvar = Mat_VarReadInfo(matfp, field_name.c_str());
   CHECK(matvar) << "Field '" << field_name << "' not present in MAT file " << filename;
   {
-    CHECK_EQ(matvar->class_type, matio_class_map<Dtype>())
-      << "Field 'data' must be of the right class (single/double) in MAT file " << filename;
-    CHECK(matvar->rank < 3) << "Field '" << field_name << "' cannot have ndims > 2 in MAT file " << filename;
+    CHECK(matvar->rank < 4) << "Field '" << field_name << "' cannot have ndims > 3 in MAT file " << filename;
+    CHECK(matvar->rank > 0) << "Field '" << field_name << "' must have ndims > 0 in MAT file " << filename;
+    int ret = -1;
+    switch (matvar->class_type) {
+    case MAT_C_SINGLE:
+        ret = read_from_mat<float>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    case MAT_C_DOUBLE:
+        ret = read_from_mat<double>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    case MAT_C_INT32:
+        ret = read_from_mat<int>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    case MAT_C_UINT32:
+        ret = read_from_mat<unsigned int>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    case MAT_C_INT16:
+        ret = read_from_mat<short>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    case MAT_C_UINT16:
+        ret = read_from_mat<unsigned short>(matfp, matvar, m_out, transpose, use_channels);
+        break;
+    default:
+        LOG(FATAL) << "MAT field " << field_name << " has unsupported class type " << matvar->class_type;
+    }
 
-    m_out.create(matvar->rank > 1 ? matvar->dims[1] : 1,
-            matvar->rank > 0 ? matvar->dims[0] : 0,
-            cv::DataType<Dtype>::type );
-
-    Dtype * data = m_out.ptr< Dtype >( 0 );
-
-    int ret = Mat_VarReadDataLinear(matfp, matvar, data, 0, 1, m_out.total());
     CHECK(ret == 0) << "Error reading array '" << field_name << "' from MAT file " << filename;
     Mat_VarFree(matvar);
-    m_out = m_out.t();
   }
   Mat_Close(matfp);
   return m_out;
@@ -147,11 +216,11 @@ template void WriteBlobToMat<unsigned int>(const char*, bool, Blob<unsigned int>
 
 
 #ifdef USE_OPENCV
-template cv::Mat ReadCVMatFromMat<float>(const string & filename, const string & field_name);
-template cv::Mat ReadCVMatFromMat<double>(const string & filename, const string & field_name);
-template cv::Mat ReadCVMatFromMat<int>(const string & filename, const string & field_name);
-template cv::Mat ReadCVMatFromMat<unsigned int>(const string & filename, const string & field_name);
-template cv::Mat ReadCVMatFromMat<short>(const string & filename, const string & field_name);
-template cv::Mat ReadCVMatFromMat<unsigned short>(const string & filename, const string & field_name);
+template int read_from_mat<float>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
+template int read_from_mat<double>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
+template int read_from_mat<int>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
+template int read_from_mat<unsigned int>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
+template int read_from_mat<short>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
+template int read_from_mat<unsigned short>(mat_t *matfp, matvar_t *matvar, cv::Mat & m, bool transpose, bool use_channels);
 #endif // USE_OPENCV
 }
