@@ -48,6 +48,8 @@ void ConfusionMatrix::clear() {
 void ConfusionMatrix::accumulate(const int actual, const int predicted) {
   CHECK_GE(actual, 0) << "gt label should not be less than zero.";
   CHECK_GE(predicted, 0) << "prediction label should not be less than zero.";
+  CHECK_LT(actual, _matrix.size()) << "gt label is larger than the confusion matrix";
+  CHECK_LT(predicted, _matrix.size()) << "prediction label is larger than the confusion matrix";
   _matrix[actual][predicted] += 1;
 }
 

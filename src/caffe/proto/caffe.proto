@@ -309,7 +309,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 152 (last added: mat_read_param)
+// LayerParameter next available layer-specific ID: 153 (last added: sspn_parse_acc_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -407,6 +407,7 @@ message LayerParameter {
   optional SPPParameter spp_param = 132;
   optional SliceParameter slice_param = 126;
   optional SSPNParameter sspn_param = 150;
+  optional SSPNParseAccuracyParameter sspn_parse_acc_param = 152;
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
@@ -1249,7 +1250,8 @@ message SSPNParameter {
     Input = 2;
   }
 
-  // the features to use for pairwise terms (take the squared L2 norm of each pair of neighbors)
+  // the features to use for pairwise terms (take the squared L2 norm of the features of each pair
+  // of neighbors)
   required PairwiseFeatures pairwise_features = 6;
 
   // all pairwise terms get multiplied by this factor
@@ -1308,6 +1310,21 @@ message SSPNParameter {
   optional bool initialize_pairwise_factors_from_dataset = 21 [default = false];
   optional string dataset_root = 22;   // root folder containing the dataset
   optional string dataset_source = 23; // file containing the list of the files in the dataset
+
+  // whether to output the full parse as the labeling or (if false) just output the predicted
+  // terminal label for each pixel
+  optional bool output_full_parse = 24 [default = false];
+}
+
+message SSPNParseAccuracyParameter {
+  // file containing the grammar protobuf (this and grammar cannot both be specified)
+  optional string grammar_file = 15; // Proto filename for the grammar.
+
+  // set of terminal labels to ignore when computing accuracy
+  repeated int32 ignore_label = 1;
+
+  // whether or not to reset accuracy computation before each forward pass
+  optional bool reset = 2 [default = true];
 }
 
 message TanHParameter {
