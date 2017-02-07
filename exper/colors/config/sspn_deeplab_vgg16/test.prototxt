@@ -602,21 +602,6 @@ layer {
 #  }
 }
 layer {
-  name: "fc8_mat"
-  type: "MatWrite"
-#  bottom: "fc8_interp_argmax"
-  bottom: "fc8_interp"
-  include {
-    phase: TEST
-  }
-  mat_write_param {
-    prefix: "${FEATURE_DIR}/${TEST_SET}/fc8/"
-    source: "${EXP}/list/${TEST_SET}_id.txt"
-    strip: 0
-    period: 1
-  }
-}
-layer {
   name: "SSPNloss"
   type: "SSPN"
   bottom: "data" # input image
@@ -634,7 +619,7 @@ layer {
 #    pairwise_factor_multiplier: 32
 #    pairwise_factor_multiplier: 64 
 #    pairwise_factor_multiplier: 0 
-    grammar_file: "/Users/afriesen/proj/sspn/generateImages/dataset/gen_grammar.prototxt"
+    grammar_file: "${DATA_ROOT}/gen_grammar.prototxt"
     scale_pairwise_factors_by_image_dims: true
     output_full_parse: true
   }
@@ -647,12 +632,27 @@ layer {
   top: "label_accuracy"
   top: "nt_accuracy"
   top: "prod_accuracy"
-  seg_accuracy_param {
-    grammar_file: "/Users/afriesen/proj/sspn/generateImages/dataset/gen_grammar.prototxt"
+  sspn_parse_acc_param {
+    grammar_file: "${DATA_ROOT}/gen_grammar.prototxt"
     ignore_label: 255
     reset: false
   }
 }
+#layer {
+#  name: "fc8_mat"
+#  type: "MatWrite"
+##  bottom: "fc8_interp_argmax"
+#  bottom: "fc8_interp"
+#  include {
+#    phase: TEST
+#  }
+#  mat_write_param {
+#    prefix: "${FEATURE_DIR}/${TEST_SET}/fc8/"
+#    source: "${EXP}/list/${TEST_SET}_id.txt"
+#    strip: 0
+#    period: 1
+#  }
+#}
 layer {
   name: "silence"
   type: "Silence"

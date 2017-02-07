@@ -29,17 +29,19 @@ layer {
   }
   transform_param {
     mirror: true
-    crop_size: 321
+#    crop_size: 321
     mean_value: 104.008
     mean_value: 116.669
     mean_value: 122.675
   }
   image_data_param {
     root_folder: "${DATA_ROOT}"
-    source: "${EXP}/list/${TRAIN_SET}.txt"
+#    source: "${EXP}/list/${TRAIN_SET}.txt"
+    source: "${DATA_ROOT}/lists/${TRAIN_SET}.txt"
     batch_size: 10
     shuffle: true
     label_type: PIXEL
+    output_label_channel: 5
   }
 }
 
@@ -835,13 +837,15 @@ layer {
 #################
 layer {
   bottom: "label"
+  bottom: "fc8_${EXP}"
   top: "label_shrink"
   name: "label_shrink"
   type: "Interp"
   interp_param {
-    shrink_factor: 8
+#    shrink_factor: 8
     pad_beg: 0
     pad_end: 0
+    type: NearestNeighbor
   }
 }
 layer {
@@ -849,6 +853,8 @@ layer {
   type: "SoftmaxWithLoss"
   bottom: "fc8_${EXP}"
   bottom: "label_shrink"
+  propagate_down: true
+  propagate_down: false
   include {
     phase: TRAIN
   }

@@ -20,16 +20,17 @@ layer {
   }
   transform_param {
     mirror: false
-    crop_size: 513
+#    crop_size: 513
     mean_value: 104.008
     mean_value: 116.669
     mean_value: 122.675
   }
   image_data_param {
     root_folder: "${DATA_ROOT}"
-    source: "${EXP}/list/${TEST_SET}.txt"
+    source: "${DATA_ROOT}/lists/${TEST_SET}.txt"
     batch_size: 1
     label_type: NONE
+    output_label_channel: 5
   }
 }
 
@@ -593,10 +594,11 @@ layer {
   name: "fc8_interp"
   type: "Interp"
   bottom: "fc8_${EXP}"
+  bottom: "data"
   top: "fc8_interp"
-  interp_param {
-    zoom_factor: 8
-  }
+#  interp_param {
+#    zoom_factor: 8
+#  }
 }
 # layer {
 #   bottom: "fc8_interp"
@@ -620,6 +622,17 @@ layer {
     source: "${EXP}/list/${TEST_SET}_id.txt"
     strip: 0
     period: 1
+  }
+}
+layer {
+  name: "accuracy"
+  type: "SegAccuracy"
+  bottom: "fc8_interp"
+  bottom: "label"
+  top: "accuracy"
+  seg_accuracy_param {
+    ignore_label: 255
+    reset: false
   }
 }
 layer {
