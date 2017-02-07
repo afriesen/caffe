@@ -8,6 +8,7 @@
 #ifdef USE_OPENCV
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/cudawarping.hpp>
 #endif  // USE_OPENCV
 
 namespace caffe {
@@ -125,7 +126,6 @@ void InterpLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
             width_out_ );
   } else {
     NOT_IMPLEMENTED;
-
   }
 }
 
@@ -145,8 +145,8 @@ void InterpLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     CHECK(sizeof(Dtype) == 4 || sizeof(Dtype) == 8);
     for ( int i = 0; i < num_; ++i ) {
       for ( int j = 0; j < channels_; ++j ) {
-        cv::gpu::resize( cv::gpu::GpuMat(size_in, type, (void *) bottom[0]->gpu_data_at( i, j ) ),
-                cv::gpu::GpuMat(size_out, type, top[0]->mutable_gpu_data_at( i, j ) ),
+        cv::cuda::resize( cv::cuda::GpuMat(size_in, type, (void *) bottom[0]->gpu_data_at( i, j ) ),
+                cv::cuda::GpuMat(size_out, type, top[0]->mutable_gpu_data_at( i, j ) ),
                 size_out, 0, 0, CV_INTER_NN );
       }
     }
