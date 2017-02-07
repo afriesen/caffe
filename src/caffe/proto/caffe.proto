@@ -812,6 +812,7 @@ message ImageDataParameter {
   }
   optional LabelType label_type = 16 [default = IMAGE];
   optional uint32 label_channels = 17 [default = 1];
+  optional int32 output_label_channel = 18 [default = -1]; // pick one label channel to output (-1 outputs all of them)
 
   // DEPRECATED. See TransformationParameter. For data pre-processing, we can do
   // simple scaling and subtracting the data mean, if provided. Note that the

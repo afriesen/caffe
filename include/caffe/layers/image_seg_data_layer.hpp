@@ -40,6 +40,7 @@ class ImageSegDataLayer : public ImageDimPrefetchingDataLayer<Dtype> {
   vector<std::pair<std::string, std::string> > lines_;
   int lines_id_;
   int label_channels_;
+  int output_label_channel_;
 };
 
 }  // namespace caffe

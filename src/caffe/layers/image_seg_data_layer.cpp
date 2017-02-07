@@ -36,6 +36,8 @@ void ImageSegDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom
   const int label_type = this->layer_param_.image_data_param().label_type();
   string root_folder = this->layer_param_.image_data_param().root_folder();
   label_channels_ = this->layer_param_.image_data_param().label_channels();
+  output_label_channel_ = this->layer_param_.image_data_param().output_label_channel();
+  if ( output_label_channel_ >= 0 ) label_channels_ = 1;
 
   TransformationParameter transform_param = this->layer_param_.transform_param();
   CHECK(transform_param.has_mean_file() == false) << 
@@ -315,11 +317,18 @@ void ImageSegDataLayer<Dtype>::read_pixel_labels(const string & root_folder,
     cv::minMaxIdx( lbls, &minval, &maxval );
     CHECK(minval >= 0 && maxval <= 255) << "Input labels will lose data if converted to CV_8U";
     cv::Mat lbls2;
-    lbls.convertTo( lbls2, CV_8U );
-    if ( new_height > 0 && new_width > 0 ) {
-        cv::resize( lbls2, lbls2, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+    if ( output_label_channel_ >= 0 ) {
+      CHECK_LT( output_label_channel_, lbls.channels() ) << "Invalid output label channel";
+      cv::extractChannel( lbls, lbls2, output_label_channel_ );
+    } else {
+      lbls2 = lbls;
     }
-    cv_img_seg.push_back(lbls2);
+    cv::Mat lbls3;
+    lbls2.convertTo( lbls3, CV_8U );
+    if ( new_height > 0 && new_width > 0 ) {
+        cv::resize( lbls3, lbls3, cv::Size( new_width, new_height ), 0, 0, cv::INTER_NEAREST );
+    }
+    cv_img_seg.push_back(lbls3);
   } else {
     cv_img_seg.push_back(ReadImageToCVMat(root_folder + filename,
             new_height, new_width, false));
