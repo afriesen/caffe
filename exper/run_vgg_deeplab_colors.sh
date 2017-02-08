@@ -10,17 +10,24 @@ SSPN_DIR=../../../sspn
 #CAFFE_BIN=${CAFFE_DIR}/build/tools/caffe
 CAFFE_BIN=${SSPN_DIR}/build/caffe_sspn
 
-EXP=colors
+#EXP=colors
+EXP=colors_paths
 
 if [ "${EXP}" = "sbd" ]; then
     NUM_LABELS=8
 #    DATA_ROOT=${ROOT_DIR}/rmt/data/pascal/VOCdevkit/VOC2012
 #    DATA_ROOT="/home/afriesen/proj/data/VOCdevkit/VOC2012"
 #    DATA_ROOT="/Users/afriesen/proj/sspn/data/iccv09Data/"
-    DATA_ROOT="/raid/afriesen/proj/sspn/data/iccv09Data/"
+    DATA_ROOT="/home/afriesen/proj/sspn/data/iccv09Data/"
 elif [ "${EXP}" = "colors" ]; then
-    NUM_LABELS=6
-    DATA_ROOT="/raid/afriesen/proj/sspn/generateImages/dataset/"
+    NUM_LABELS=6 # num. terminal labels
+    DATA_ROOT="/home/afriesen/proj/sspn/generateImages/dataset/"
+    NET_ID=deeplab_vgg16
+elif [ "${EXP}" = "colors_paths" ]; then
+    NUM_LABELS=16 # num. paths
+    DATA_ROOT="/home/afriesen/proj/sspn/generateImages/dataset/"
+    EXP=colors
+    NET_ID=deeplab_vgg16_paths
 else
     NUM_LABELS=0
     echo "Wrong exp name"
@@ -31,7 +38,7 @@ fi
 ########### voc12 ################
 #NET_ID=deelab_largeFOV
 #NET_ID=deeplab_resnet101
-NET_ID=deeplab_vgg16
+#NET_ID=deeplab_vgg16
 
 FOLD_SUFFIX= #".1"
 #FOLD_SUFFIX=".oneimg"
@@ -85,7 +92,7 @@ if [ ${RUN_TRAIN} -eq 1 ]; then
     #
 #    MODEL=${EXP}/model/${NET_ID}/init.caffemodel
 #    MODEL=${EXP}/model/vgg16/init.caffemodel
-    MODEL=sbd/model/vgg16/init.caffemodel
+    MODEL=sbd/model/deeplab_vgg16/init.caffemodel
     #
     echo Training net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} using weights from ${MODEL}
     for pname in train solver; do
@@ -110,30 +117,32 @@ fi
 if [ ${RUN_TEST} -eq 1 ]; then
     #
     for TEST_SET in val; do
-		TEST_SET=${TEST_SET}${FOLD_SUFFIX}
-		TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
-		echo TEST ITER = "${TEST_ITER}"
-		MODEL=${EXP}/model/${NET_ID}/test${FOLD_SUFFIX}.caffemodel
-		if [ ! -f ${MODEL} ]; then
-				MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
-		fi
-		#
-		echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
-		FEATURE_DIR=${EXP}/features/${NET_ID}
-		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
-#		mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
-		sed "$(eval echo $(cat sub.sed))" \
-				${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
-		CMD="${CAFFE_BIN} test \
+#    for TEST_SET in train; do
+        TEST_SET=${TEST_SET}${FOLD_SUFFIX}
+        #TEST_ITER=`cat ${EXP}/list/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
+        TEST_ITER=`cat ${DATA_ROOT}/lists/${TEST_SET}.txt | wc -l | sed 's/^ *//'`
+        echo TEST ITER = "${TEST_ITER}"
+        MODEL=${EXP}/model/${NET_ID}/test${FOLD_SUFFIX}.caffemodel
+        if [ ! -f ${MODEL} ]; then
+            MODEL=`ls -t ${EXP}/model/${NET_ID}/train${FOLD_SUFFIX}_iter_*.caffemodel | head -n 1`
+        fi
+        #
+        echo Testing net ${EXP}/${NET_ID} with fold suffix ${FOLD_SUFFIX} with weights from ${MODEL} \(test set = ${TEST_SET}\)
+        FEATURE_DIR=${EXP}/features/${NET_ID}
+        mkdir -p ${FEATURE_DIR}/${TEST_SET}/fc8
+#        mdir -p ${FEATURE_DIR}/${TEST_SET}/fc9
+#        mkdir -p ${FEATURE_DIR}/${TEST_SET}/seg_score
+        sed "$(eval echo $(cat sub.sed))" \
+            ${CONFIG_DIR}/test.prototxt > ${CONFIG_DIR}/test_${TEST_SET}.prototxt
+        CMD="${CAFFE_BIN} test \
              --model=${CONFIG_DIR}/test_${TEST_SET}.prototxt \
              --weights=${MODEL} \
              --iterations=${TEST_ITER}"
 #             --gpu=${DEV_ID} \
         if [ ${USE_GPU} -ne 0 ]; then
-        	CMD="${CMD} --gpu=${DEV_ID}"
-		fi
-		echo Running ${CMD} && ${CMD}
+            CMD="${CMD} --gpu=${DEV_ID}"
+        fi
+        echo Running ${CMD} && ${CMD}
     done
 fi
 
